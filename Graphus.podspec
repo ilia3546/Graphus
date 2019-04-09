@@ -27,10 +27,5 @@ Pod::Spec.new do |s|
       cs.source_files  = 'Graphus/Codable/**/*.{swift,h,m}'
   end
   
-  s.subspec 'ObjectMapper' do |oms|
-      oms.dependency      'Graphus/Core'
-      oms.source_files  = 'Graphus/ObjectMapper/**/*.{swift,h,m}'
-  end
-  
 
 end
