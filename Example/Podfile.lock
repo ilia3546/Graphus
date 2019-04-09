@@ -1,0 +1,16 @@
+PODS:
+  - Graphus (0.1.0)
+
+DEPENDENCIES:
+  - Graphus (from `../`)
+
+EXTERNAL SOURCES:
+  Graphus:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Graphus: e17e60b2b59b65617397d09a5ad3cc8d7ae8647b
+
+PODFILE CHECKSUM: 8ea0f243b3943ec3a9535dff3df50dc6a7abed46
+
+COCOAPODS: 1.5.3

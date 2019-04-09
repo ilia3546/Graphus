@@ -1,0 +1,6 @@
+framework module Graphus {
+  umbrella header "Graphus-umbrella.h"
+
+  export *
+  module * { export * }
+}
