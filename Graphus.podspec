@@ -14,7 +14,6 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'ilia3546' => 'ilia3546@me.com' }
   s.source           = { :git => 'https://github.com/ilia3546/Graphus.git', :tag => s.version.to_s }
-  s.swift_version    = '5.0'
   s.ios.deployment_target = '8.0'
   s.default_subspec = 'Core'
   
