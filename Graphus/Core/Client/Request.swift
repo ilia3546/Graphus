@@ -10,13 +10,13 @@ import Foundation
 
 public class GraphusRequest {
     
-    enum Mode: String {
+    public  enum Mode: String {
         case query, mutation
     }
     
-    var mode: Mode
-    var query: Query
-    var client: GraphusClient
+    public var mode: Mode
+    public var query: Query
+    public var client: GraphusClient
     var sessionDataTask: URLSessionDataTask!
     
     private var complectionBlock: ((Int?, Any?, Error?, [GraphusError]) -> Void)?
@@ -39,7 +39,7 @@ public class GraphusRequest {
         request.addValue("application/json", forHTTPHeaderField: "content-type")
         
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            request.addValue("AeroGraph / \(version)", forHTTPHeaderField: "User-Agent")
+            request.addValue("Graphus / \(version)", forHTTPHeaderField: "User-Agent")
         }
         
         let params = ["query": mode.rawValue + query.build()]
@@ -54,7 +54,13 @@ public class GraphusRequest {
         
         if let response = currentObj as? [String: Any]{
             
-            if let errorDescription = response["error_description"] as? String {
+            if let errorType = response["error"] as? String,
+                errorType == "invalid_grant",
+                let errorDescription = response["error_description"] as? String {
+                
+                throw GraphusError.invalidGrand(errorDescription)
+                
+            }else if let errorDescription = response["error_description"] as? String {
                 // Test oAuth error
                 throw GraphusError.serverError(errorDescription)
                 
@@ -186,7 +192,11 @@ extension GraphusRequest {
             
             if let error = internalError {
                 (queue ?? .main).async {
-                    completionHandler(.failure(.otherError(error)))
+                    if let error = error as? GraphusError {
+                        completionHandler(.failure(error))
+                    }else{
+                        completionHandler(.failure(.otherError(error)))
+                    }
                 }
                 return
             }
@@ -209,6 +219,12 @@ extension GraphusRequest {
             
         }
 
+
+        if sessionDataTask.state == .completed {
+            let urlRequest = GraphusRequest.createRequest(query: query, mode: mode, client: client)
+            sessionDataTask = client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
+        }
+        
         sessionDataTask.resume()
 
         return .init(sessionDataTask)

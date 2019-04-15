@@ -14,6 +14,7 @@ public enum GraphusError: Error {
     case serverError(String)
     case graphQLError(String)
     case otherError(Error)
+    case invalidGrand(String)
     
 }
 
@@ -25,6 +26,8 @@ extension GraphusError: LocalizedError {
         case .serverError(let str):
             return str
         case .graphQLError(let str):
+            return str
+        case .invalidGrand(let str):
             return str
         case .unknownKey(let key):
             return "Unknown key \"\(key)\""

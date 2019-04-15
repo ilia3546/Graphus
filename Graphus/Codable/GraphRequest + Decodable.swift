@@ -18,7 +18,7 @@ extension GraphusRequest {
                                          completionHandler: @escaping (Result<GraphusResponse<T>, GraphusError>) -> Void) -> GraphusRequest.Cancelable {
         
         return send(queue: .global(qos: .background), customRootKey: customRootKey) { result in
-            
+
             do{
                 
                 let response = try result.get()
