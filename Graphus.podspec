@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'Codable' do |cs|
-      cs.dependency      'Source/Core'
+      cs.dependency      'Core'
       cs.source_files  = 'Source/Codable/**/*.{swift,h,m}'
   end
   
