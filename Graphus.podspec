@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Graphus'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
   s.summary          = 'GraphQL client'
   s.homepage         = 'https://github.com/ilia3546/Graphus'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
@@ -18,12 +18,12 @@ Pod::Spec.new do |s|
   s.default_subspec = 'Core'
   
   s.subspec 'Core' do |cs|
-      cs.source_files  = 'Graphus/Core/**/*.{swift,h,m}'
+      cs.source_files  = 'Source/Core/**/*.{swift,h,m}'
   end
   
   s.subspec 'Codable' do |cs|
-      cs.dependency      'Graphus/Core'
-      cs.source_files  = 'Graphus/Codable/**/*.{swift,h,m}'
+      cs.dependency      'Source/Core'
+      cs.source_files  = 'Source/Codable/**/*.{swift,h,m}'
   end
   
 

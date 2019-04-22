@@ -53,9 +53,9 @@ public class GraphusRequest {
         let currentObj = try JSONSerialization.jsonObject(with: data, options: [])
         
         if let response = currentObj as? [String: Any]{
-            
+            print("response", response)
             if let errorType = response["error"] as? String,
-                errorType == "invalid_grant",
+                errorType == "invalid_grant" || errorType == "access_denied",
                 let errorDescription = response["error_description"] as? String {
                 
                 throw GraphusError.invalidGrand(errorDescription)
