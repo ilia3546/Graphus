@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-<a href="https://travis-ci.org/ilia3546/Graphus"><img src="https://img.shields.io/travis/ilia3546/Graphus/master.svg"></a>
+<a href="https://travis-ci.org/ilia3546/Graphus"><img src="https://travis-ci.com/ilia3546/Graphus.svg?branch=0.1.6"></a>
 <a href="https://github.com/Carthage/Carthage/"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
 <a href="http://onevcat.github.io/Graphus/"><img src="https://img.shields.io/cocoapods/v/Graphus.svg?style=flat"></a>
 <a href="https://raw.githubusercontent.com/ilia3546/Graphus/master/LICENSE"><img src="https://img.shields.io/cocoapods/l/Graphus.svg?style=flat"></a>
