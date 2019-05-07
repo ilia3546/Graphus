@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F3C6FC0B2281C65F007DE0F2 /* GraphusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */; };
+		F3C6FC0D2281C65F007DE0F2 /* Graphus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DA0D6E226E05D30018ED47 /* Graphus.framework */; };
 		F3DA0D91226E064A0018ED47 /* Graphus.h in Headers */ = {isa = PBXBuildFile; fileRef = F3DA0D79226E06490018ED47 /* Graphus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F3DA0D93226E064A0018ED47 /* QueryBuilder + Coding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D7C226E06490018ED47 /* QueryBuilder + Coding.swift */; };
 		F3DA0D94226E064A0018ED47 /* GraphQueryKeyedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D7D226E06490018ED47 /* GraphQueryKeyedContainer.swift */; };
@@ -27,7 +29,20 @@
 		F3DA0DA3226E064A0018ED47 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D90226E06490018ED47 /* Request.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F3C6FC0E2281C65F007DE0F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3DA0D65226E05D30018ED47 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3DA0D6D226E05D30018ED47;
+			remoteInfo = Graphus;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		F3C6FC082281C65F007DE0F2 /* GraphusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphusTests.swift; sourceTree = "<group>"; };
+		F3C6FC0C2281C65F007DE0F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3DA0D6E226E05D30018ED47 /* Graphus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Graphus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3DA0D79226E06490018ED47 /* Graphus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Graphus.h; path = Source/Graphus.h; sourceTree = SOURCE_ROOT; };
 		F3DA0D7A226E06490018ED47 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
@@ -54,6 +69,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F3C6FC052281C65F007DE0F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3C6FC0D2281C65F007DE0F2 /* Graphus.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F3DA0D6B226E05D30018ED47 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -64,10 +87,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F3C6FC092281C65F007DE0F2 /* GraphusTests */ = {
+			isa = PBXGroup;
+			children = (
+				F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */,
+				F3C6FC0C2281C65F007DE0F2 /* Info.plist */,
+			);
+			path = GraphusTests;
+			sourceTree = "<group>";
+		};
 		F3DA0D64226E05D30018ED47 = {
 			isa = PBXGroup;
 			children = (
 				F3DA0D70226E05D30018ED47 /* Graphus */,
+				F3C6FC092281C65F007DE0F2 /* GraphusTests */,
 				F3DA0D6F226E05D30018ED47 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -76,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				F3DA0D6E226E05D30018ED47 /* Graphus.framework */,
+				F3C6FC082281C65F007DE0F2 /* GraphusTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -165,6 +199,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		F3C6FC072281C65F007DE0F2 /* GraphusTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3C6FC122281C65F007DE0F2 /* Build configuration list for PBXNativeTarget "GraphusTests" */;
+			buildPhases = (
+				F3C6FC042281C65F007DE0F2 /* Sources */,
+				F3C6FC052281C65F007DE0F2 /* Frameworks */,
+				F3C6FC062281C65F007DE0F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3C6FC0F2281C65F007DE0F2 /* PBXTargetDependency */,
+			);
+			name = GraphusTests;
+			productName = GraphusTests;
+			productReference = F3C6FC082281C65F007DE0F2 /* GraphusTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		F3DA0D6D226E05D30018ED47 /* Graphus */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F3DA0D76226E05D30018ED47 /* Build configuration list for PBXNativeTarget "Graphus" */;
@@ -189,9 +241,13 @@
 		F3DA0D65226E05D30018ED47 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Bluetech LLC";
 				TargetAttributes = {
+					F3C6FC072281C65F007DE0F2 = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
 					F3DA0D6D226E05D30018ED47 = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
@@ -210,11 +266,19 @@
 			projectRoot = "";
 			targets = (
 				F3DA0D6D226E05D30018ED47 /* Graphus */,
+				F3C6FC072281C65F007DE0F2 /* GraphusTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F3C6FC062281C65F007DE0F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F3DA0D6C226E05D30018ED47 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -225,6 +289,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F3C6FC042281C65F007DE0F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3C6FC0B2281C65F007DE0F2 /* GraphusTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F3DA0D6A226E05D30018ED47 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -251,7 +323,53 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		F3C6FC0F2281C65F007DE0F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3DA0D6D226E05D30018ED47 /* Graphus */;
+			targetProxy = F3C6FC0E2281C65F007DE0F2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		F3C6FC102281C65F007DE0F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H93M692V93;
+				INFOPLIST_FILE = GraphusTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bluetech.GraphusTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F3C6FC112281C65F007DE0F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H93M692V93;
+				INFOPLIST_FILE = GraphusTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bluetech.GraphusTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		F3DA0D74226E05D30018ED47 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -431,6 +549,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F3C6FC122281C65F007DE0F2 /* Build configuration list for PBXNativeTarget "GraphusTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3C6FC102281C65F007DE0F2 /* Debug */,
+				F3C6FC112281C65F007DE0F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F3DA0D68226E05D30018ED47 /* Build configuration list for PBXProject "Graphus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

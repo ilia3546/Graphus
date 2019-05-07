@@ -8,13 +8,13 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Graphus'
-  s.version          = '0.1.2'
+  s.version          = '0.1.6'
   s.summary          = 'GraphQL client'
   s.homepage         = 'https://github.com/ilia3546/Graphus'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'ilia3546' => 'ilia3546@me.com' }
   s.source           = { :git => 'https://github.com/ilia3546/Graphus.git', :tag => s.version.to_s }
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
   s.default_subspec = 'Core'
   
   s.subspec 'Core' do |cs|

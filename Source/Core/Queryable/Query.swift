@@ -62,9 +62,3 @@ public struct Query: Field {
     }
     
 }
-
-extension String.StringInterpolation {
-    mutating func appendInterpolation(_ value: Query) {
-        self.appendLiteral(value.build())
-    }
-}
