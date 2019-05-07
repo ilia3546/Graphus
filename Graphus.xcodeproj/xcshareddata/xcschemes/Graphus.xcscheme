@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F3C6FC072281C65F007DE0F2"
+               BuildableName = "GraphusTests.xctest"
+               BlueprintName = "GraphusTests"
+               ReferencedContainer = "container:Graphus.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "F3DA0D6D226E05D30018ED47"
+            BuildableName = "Graphus.framework"
+            BlueprintName = "Graphus"
+            ReferencedContainer = "container:Graphus.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
