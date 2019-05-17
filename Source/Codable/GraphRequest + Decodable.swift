@@ -22,11 +22,17 @@ extension GraphusRequest {
             do{
                 
                 let response = try result.get()
+                let mappedData: T!
                 
-                let data = try JSONSerialization.data(withJSONObject: response.data, options: [])
-                let decoder = customDecoder ?? JSONDecoder()
-                    
-                var newResponse = GraphusResponse<T>(data: try decoder.decode(T.self, from: data))
+                if let data = response.data as? T {
+                    mappedData = data
+                }else{
+                    let data = try JSONSerialization.data(withJSONObject: response.data, options: [])
+                    let decoder = customDecoder ?? JSONDecoder()
+                    mappedData = try decoder.decode(T.self, from: data)
+                }
+                
+                var newResponse = GraphusResponse<T>(data: mappedData)
                 newResponse.errors = response.errors
                 
                 (queue ?? .main).async {
