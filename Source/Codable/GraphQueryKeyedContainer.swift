@@ -22,8 +22,8 @@ public class GraphQueryKeyedContainer<Key: CodingKey>: GraphQueryContainer{
     }
     
     /// Add child query
-    public func addChild(_ child: Queryable.Type, with args: Arguments? = nil, forKey key: Key){
-        addChild(child, with: args, forKey: key.stringValue)
+    public func addChild(_ child: Queryable.Type, context: QueryBuilderContext? = nil, with args: Arguments? = nil, forKey key: Key){
+        addChild(child, context: context, with: args, forKey: key.stringValue)
     }
     
 }
