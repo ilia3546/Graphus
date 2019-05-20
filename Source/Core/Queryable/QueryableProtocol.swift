@@ -8,16 +8,22 @@
 
 import Foundation
 
+public protocol QueryBuilderContext {
+    
+}
+
 /// GraphQL query build model protocol
 public protocol Queryable {
     /// Query building
-    static func buildQuery(with builder: QueryBuilder)
+    static func buildQuery(with builder: QueryBuilder, context: QueryBuilderContext?)
 }
 
+
+
 extension Queryable {
-    static var fields: [Field] {
+    static func fields(with context: QueryBuilderContext?) -> [Field] {
         let builder = QueryBuilder()
-        buildQuery(with: builder)
+        buildQuery(with: builder, context: context)
         return builder.fields
     }
 }

@@ -16,12 +16,16 @@ class ViewController: UIViewController {
         // Add additional headers as needed
         configuration.httpAdditionalHeaders = ["Authorization": "Bearer <token>"] // Replace `<token>`
         let url = URL(string: "http://localhost:8080/graphql")!
-        return GraphusClient(url: url, configuration: configuration)
+        let client = GraphusClient(url: url, configuration: configuration)
+        client.debugParams = [.printSendableQueries]
+        return client
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let authorsQuery = Query("authors", model: Author.self)
+        
+        let authorsQuery = Query("authors", model: Author.self, context: Author.Context(incudeBooks: false))
+
         self.client.query(authorsQuery).send(mapToDecodable: [Author].self) { (result) in
             switch result{
             case .success(let response):

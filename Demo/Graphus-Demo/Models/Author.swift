@@ -11,15 +11,21 @@ import Graphus
 
 struct Author: Decodable, Queryable {
     
+    struct Context: QueryBuilderContext {
+        var incudeBooks: Bool
+    }
+    
     var firstName: String
     var secondName: String
-    var books: [Book]
+    var books: [Book]?
     
-    static func buildQuery(with builder: QueryBuilder) {
+    static func buildQuery(with builder: QueryBuilder, context: QueryBuilderContext?) {
         let query = builder.query(keyedBy: CodingKeys.self)
         query.addField(.firstName)
         query.addField(.secondName)
-        query.addChild(Book.self, forKey: .books)
+        if let context = context as? Context, context.incudeBooks {
+            query.addChild(Book.self, forKey: .books)
+        }
     }
     
 }

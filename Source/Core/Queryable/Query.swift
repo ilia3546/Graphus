@@ -30,8 +30,8 @@ public struct Query: Field {
         self.arguments = arguments ?? [:]
     }
     
-    public init(_ name: String, arguments: Arguments? = nil, model: Queryable.Type) {
-        self.init(name, arguments: arguments, fields: model.fields)
+    public init(_ name: String, arguments: Arguments? = nil, model: Queryable.Type, context: QueryBuilderContext? = nil) {
+        self.init(name, arguments: arguments, fields: model.fields(with: context))
     }
     
     public mutating func appendArguments(_ newArgs: Arguments?){

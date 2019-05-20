@@ -14,7 +14,7 @@ struct Book: Decodable, Queryable {
     var title: String
     var isbn: String
     
-    static func buildQuery(with builder: QueryBuilder) {
+    static func buildQuery(with builder: QueryBuilder, context: QueryBuilderContext?) {
         let query = builder.query(keyedBy: CodingKeys.self)
         query.addField(.title)
         query.addField(.isbn)

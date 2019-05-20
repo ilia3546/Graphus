@@ -29,8 +29,8 @@ public class GraphQueryContainer{
     }
     
     /// Add child query
-    public func addChild(_ child: Queryable.Type, with args: Arguments? = nil, forKey key: String){
-        builder.fields.append(Query(key, arguments: args, model: child))
+    public func addChild(_ child: Queryable.Type, context: QueryBuilderContext? = nil, with args: Arguments? = nil, forKey key: String){
+        builder.fields.append(Query(key, arguments: args, model: child, context: context))
     }
     
 }
