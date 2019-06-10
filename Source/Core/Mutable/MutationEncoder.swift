@@ -13,7 +13,6 @@ public class MutationEncoder {
     
     internal var fields = [String: String]()
     public var dateFormatter = DateFormatter()
-    public var includeNullValues = false
     
     public func container() -> MutationContainer {
         return MutationContainer(self)

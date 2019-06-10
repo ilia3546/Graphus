@@ -12,35 +12,42 @@ import Foundation
 public class MutationContainer{
     
     fileprivate var encoder: MutationEncoder
-    public var includeNullValues: Bool
     
     internal init(_ encoder: MutationEncoder){
         self.encoder = encoder
-        self.includeNullValues = encoder.includeNullValues
+    }
+    
+    public func encodeIfPresent(_ value: ArgumentValue?, forKey key: String) {
+        if let value = value {
+            self.encoder.fields[key] = value.argumentValue
+        }
+    }
+    
+    public func encodeIfPresent(_ value: Date?, forKey key: String) {
+        if let value = value{
+            let dateValue = self.encoder.dateFormatter.string(from: value)
+            self.encoder.fields[key] = "\"\(dateValue)\""
+        }
     }
     
     public func encode(_ value: ArgumentValue?, forKey key: String) {
         if let value = value{
-            encoder.fields[key] = value.argumentValue
+            self.encodeIfPresent(value, forKey: key)
         }else{
-            encodeNull(forKey: key)
+            self.encodeNull(forKey: key)
         }
     }
     
-    
     public func encode(_ value: Date?, forKey key: String) {
-        if let value = value{
-            let dateValue = encoder.dateFormatter.string(from: value)
-            encoder.fields[key] = "\"\(dateValue)\""
+        if let value = value {
+            self.encodeIfPresent(value, forKey: key)
         }else{
-            encodeNull(forKey: key)
+            self.encodeNull(forKey: key)
         }
     }
     
     private func encodeNull(forKey key: String){
-        if encoder.includeNullValues {
-            encoder.fields[key] = "null"
-        }
+        self.encoder.fields[key] = "null"
     }
     
 }

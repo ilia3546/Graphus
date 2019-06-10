@@ -10,12 +10,20 @@ import Foundation
 
 public class MutationKeyedContainer<Key: CodingKey>: MutationContainer{
     
+    public func encodeIfPresent(_ value: ArgumentValue?, forKey key: KeyedEncodingContainer<Key>.Key) {
+        self.encodeIfPresent(value, forKey: key.stringValue)
+    }
+    
+    public func encodeIfPresent(_ value: Date?, forKey key: KeyedEncodingContainer<Key>.Key) {
+        self.encodeIfPresent(value, forKey: key.stringValue)
+    }
+    
     public func encode(_ value: ArgumentValue?, forKey key: KeyedEncodingContainer<Key>.Key) {
-        encode(value, forKey: key.stringValue)
+        self.encode(value, forKey: key.stringValue)
     }
 
     public func encode(_ value: Date?, forKey key: KeyedEncodingContainer<Key>.Key) {
-        encode(value, forKey: key.stringValue)
+        self.encode(value, forKey: key.stringValue)
     }
 
 }
