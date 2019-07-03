@@ -36,10 +36,17 @@ public class GraphusRequest {
         
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "content-type")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            request.addValue("Graphus / \(version)", forHTTPHeaderField: "User-Agent")
+        var isUserAgentExists = false
+        
+        if let headers = client.session.configuration.httpAdditionalHeaders,
+            let _ = headers["User-Agent"] ?? headers["User-agent"] ?? headers["user-agent"] ?? headers["user-Agent"] {
+            isUserAgentExists = true
+        }
+        
+        if !isUserAgentExists, let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            request.addValue("Graphus /\(version)", forHTTPHeaderField: "User-Agent")
         }
         
         let params = ["query": mode.rawValue + query.build()]

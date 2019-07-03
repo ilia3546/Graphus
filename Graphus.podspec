@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Graphus'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'Powerful and strongly-typed, pure-Swift GraphQL client for iOS'
   s.homepage         = 'https://github.com/ilia3546/Graphus'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
