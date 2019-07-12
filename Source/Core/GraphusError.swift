@@ -19,25 +19,25 @@ public struct GraphusError: Error {
         case unknown
     }
     
-    var type: Type
+    public var type: Type
     fileprivate var description: String?
-    var query: Query?
-    var request: URLRequest?
+    public var query: Query?
+    public var request: URLRequest?
     
-    init(type: Type = .unknown, query: Query?, request: URLRequest?) {
+    public init(type: Type = .unknown, query: Query?, request: URLRequest?) {
         self.type = type
         self.query = query
         self.request = request
     }
     
-    init(_ error: Error, type: Type = .unknown, query: Query?, request: URLRequest?) {
+    public init(_ error: Error, type: Type = .unknown, query: Query?, request: URLRequest?) {
         self.description = error.localizedDescription
         self.type = type
         self.query = query
         self.request = request
     }
     
-    init(_ string: String, type: Type = .unknown, query: Query?, request: URLRequest?) {
+    public init(_ string: String, type: Type = .unknown, query: Query?, request: URLRequest?) {
         self.description = string
         self.type = type
         self.query = query
