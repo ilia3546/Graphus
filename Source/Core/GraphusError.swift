@@ -7,32 +7,52 @@
 
 import Foundation
 
-public enum GraphusError: Error {
+
+public struct GraphusError: Error {
     
-    case unknownKey(String)
-    case responseDataIsNull
-    case serverError(String)
-    case graphQLError(String)
-    case otherError(Error)
-    case invalidGrand(String)
+    public enum `Type`: String {
+        case unknownKey
+        case responseDataIsNull
+        case serverError
+        case graphQLError
+        case invalidGrand
+        case unknown
+    }
+    
+    var type: Type
+    fileprivate var description: String?
+    var query: Query?
+    var request: URLRequest?
+    
+    init(type: Type = .unknown, query: Query?, request: URLRequest?) {
+        self.type = type
+        self.query = query
+        self.request = request
+    }
+    
+    init(_ error: Error, type: Type = .unknown, query: Query?, request: URLRequest?) {
+        self.description = error.localizedDescription
+        self.type = type
+        self.query = query
+        self.request = request
+    }
+    
+    init(_ string: String, type: Type = .unknown, query: Query?, request: URLRequest?) {
+        self.description = string
+        self.type = type
+        self.query = query
+        self.request = request
+    }
     
 }
 
 extension GraphusError: LocalizedError {
     public var errorDescription: String? {
-        switch self {
+        switch self.type {
         case .responseDataIsNull:
             return "Response data is null"
-        case .serverError(let str):
-            return str
-        case .graphQLError(let str):
-            return str
-        case .invalidGrand(let str):
-            return str
-        case .unknownKey(let key):
-            return "Unknown key \"\(key)\""
-        case .otherError(let error):
-            return error.localizedDescription
+        default:
+            return self.description
         }
     }
 }

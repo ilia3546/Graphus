@@ -44,7 +44,8 @@ extension GraphusRequest {
                     if let error = error as? GraphusError {
                         completionHandler(.failure(error))
                     }else{
-                        completionHandler(.failure(.otherError(error)))
+                        let error = GraphusError(error, query: self.query, request: self.sessionDataTask.originalRequest)
+                        completionHandler(.failure(error))
                     }
                 }
             }
