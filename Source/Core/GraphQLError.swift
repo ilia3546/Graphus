@@ -23,6 +23,9 @@ public struct GraphQLError: GraphusError {
     public var request: URLRequest?
     
     init?(_ json: Any, query: Query?, request: URLRequest?) {
+        self.query = query
+        self.request = request
+        
         guard let json = json as? [String: Any],
             let message = json["message"] as? String else {
             return nil
