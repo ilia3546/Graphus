@@ -7,7 +7,12 @@
 
 import Foundation
 
-public struct GraphusError: Error {
+public protocol GraphusError: Error {
+    var query: Query? { get set }
+    var request: URLRequest? { get set }
+}
+
+public struct GraphusInternalError: GraphusError {
     
     public enum `Type`: String {
         case unknownKey
@@ -45,7 +50,7 @@ public struct GraphusError: Error {
     
 }
 
-extension GraphusError: LocalizedError {
+extension GraphusInternalError: LocalizedError {
     public var errorDescription: String? {
         switch self.type {
         case .responseDataIsNull:

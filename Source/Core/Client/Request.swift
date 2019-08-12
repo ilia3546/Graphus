@@ -63,20 +63,20 @@ public class GraphusRequest {
             if let errorType = response["error"] as? String,
                 errorType == "invalid_grant" || errorType == "access_denied",
                 let errorDescription = response["error_description"] as? String {
-                throw GraphusError(errorDescription, type: .invalidGrand, query: self.query, request: self.sessionDataTask.originalRequest)
+                throw GraphusInternalError(errorDescription, type: .invalidGrand, query: self.query, request: self.sessionDataTask.originalRequest)
                 
             }else if let errorDescription = response["error_description"] as? String {
                 // Test oAuth error
-                throw GraphusError(errorDescription, type: .serverError, query: self.query, request: self.sessionDataTask.originalRequest)
+                throw GraphusInternalError(errorDescription, type: .serverError, query: self.query, request: self.sessionDataTask.originalRequest)
                 
             }else if let errorMsg = response["errorMsg"] as? String {
                 // Test server errors
-                throw GraphusError(errorMsg, type: .serverError, query: self.query, request: self.sessionDataTask.originalRequest)
+                throw GraphusInternalError(errorMsg, type: .serverError, query: self.query, request: self.sessionDataTask.originalRequest)
                 
             }else if let errorsKey = self.client.rootErrorsKey,
                 let errors = response[errorsKey] as? [Any] {
                 
-                return errors.compactMap({ GraphQLError($0)})
+                return errors.compactMap({ GraphQLError($0, query: self.query, request: self.sessionDataTask.originalRequest)})
                 
             }
             
@@ -98,7 +98,7 @@ public class GraphusRequest {
         do{
             
             guard let data = data else {
-                throw GraphusError(type: .responseDataIsNull, query: self.query, request: self.sessionDataTask.originalRequest)
+                throw GraphusInternalError(type: .responseDataIsNull, query: self.query, request: self.sessionDataTask.originalRequest)
             }
             
             let graphErrors = try validateGraphErrors(data, response: response)
@@ -123,7 +123,7 @@ public class GraphusRequest {
                     currentObj = dict[index]
                     
                 }else{
-                    throw GraphusError("Unknown key \"\(pathComponent)\"", type: .unknownKey, query: self.query, request: self.sessionDataTask.originalRequest)
+                    throw GraphusInternalError("Unknown key \"\(pathComponent)\"", type: .unknownKey, query: self.query, request: self.sessionDataTask.originalRequest)
                     
                 }
                 
@@ -134,10 +134,10 @@ public class GraphusRequest {
                     if let nextObj = nextObj{
                         currentObj = nextObj
                     }else{
-                        throw GraphusError("Unknown key \"\(pathComponent)\"", type: .unknownKey, query: self.query, request: self.sessionDataTask.originalRequest)
+                        throw GraphusInternalError("Unknown key \"\(pathComponent)\"", type: .unknownKey, query: self.query, request: self.sessionDataTask.originalRequest)
                     }
                 }else{
-                    throw GraphusError("Unknown key \"\(pathComponent)\"", type: .unknownKey, query: self.query, request: self.sessionDataTask.originalRequest)
+                    throw GraphusInternalError("Unknown key \"\(pathComponent)\"", type: .unknownKey, query: self.query, request: self.sessionDataTask.originalRequest)
                 }
                 
             }
@@ -171,7 +171,7 @@ extension GraphusRequest {
     @discardableResult
     public func send(queue: DispatchQueue? = nil,
                      customRootKey: String? = nil,
-                           completionHandler: @escaping (Result<GraphusResponse<Any>, GraphusError>) -> Void) -> GraphusRequest.Cancelable {
+                           completionHandler: @escaping (Result<GraphusResponse<Any>, GraphusInternalError>) -> Void) -> GraphusRequest.Cancelable {
         
         if self.client.debugParams.contains(.logSendedRequests) {
             print("[Graphus] send request \"\(query.name)\"")
@@ -192,10 +192,10 @@ extension GraphusRequest {
             
             if let error = internalError {
                 (queue ?? .main).async {
-                    if let error = error as? GraphusError {
+                    if let error = error as? GraphusInternalError {
                         completionHandler(.failure(error))
                     }else{
-                        let error = GraphusError(error, query: self.query, request: self.sessionDataTask.originalRequest)
+                        let error = GraphusInternalError(error, query: self.query, request: self.sessionDataTask.originalRequest)
                         completionHandler(.failure(error))
                     }
                 }
@@ -206,18 +206,7 @@ extension GraphusRequest {
                 let key = customRootKey ?? "\(self.client.rootResponseKey).\(self.query.name)"
                 var data: Any?
                 if let res = res {
-                    
-                    do{
-                        data = try self.extractObject(for: key, from: res)
-                        
-                    }catch{
-                        if let error = error as? GraphusError {
-                            completionHandler(.failure(error))
-                        }else{
-                            completionHandler(.failure(.init(type: .unknown, query: self.query, request: self.sessionDataTask.originalRequest)))
-                        }
-                        return
-                    }
+                    data = try? self.extractObject(for: key, from: res)
                 }
                 
                 var response = GraphusResponse<Any>(data: data)
