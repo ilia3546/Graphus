@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 public struct GraphusError: Error {
     
     public enum `Type`: String {

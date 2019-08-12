@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F3A1431F230182AC00AF6F99 /* GraphQLError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A1431E230182AC00AF6F99 /* GraphQLError.swift */; };
 		F3C6FC0B2281C65F007DE0F2 /* GraphusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */; };
 		F3C6FC0D2281C65F007DE0F2 /* Graphus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DA0D6E226E05D30018ED47 /* Graphus.framework */; };
 		F3DA0D91226E064A0018ED47 /* Graphus.h in Headers */ = {isa = PBXBuildFile; fileRef = F3DA0D79226E06490018ED47 /* Graphus.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F3A1431E230182AC00AF6F99 /* GraphQLError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLError.swift; sourceTree = "<group>"; };
 		F3C6FC082281C65F007DE0F2 /* GraphusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphusTests.swift; sourceTree = "<group>"; };
 		F3C6FC0C2281C65F007DE0F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				F3DA0D82226E06490018ED47 /* Mutable */,
 				F3DA0D86226E06490018ED47 /* Arguments.swift */,
 				F3DA0D87226E06490018ED47 /* GraphusError.swift */,
+				F3A1431E230182AC00AF6F99 /* GraphQLError.swift */,
 				F3DA0D88226E06490018ED47 /* Queryable */,
 				F3DA0D8D226E06490018ED47 /* Client */,
 			);
@@ -305,6 +308,7 @@
 				F3DA0D9B226E064A0018ED47 /* Arguments.swift in Sources */,
 				F3DA0D9C226E064A0018ED47 /* GraphusError.swift in Sources */,
 				F3DA0D97226E064A0018ED47 /* MutationEncoder + Coding.swift in Sources */,
+				F3A1431F230182AC00AF6F99 /* GraphQLError.swift in Sources */,
 				F3DA0DA1226E064A0018ED47 /* Response.swift in Sources */,
 				F3DA0D9F226E064A0018ED47 /* QueryableProtocol.swift in Sources */,
 				F3DA0DA2226E064A0018ED47 /* Client.swift in Sources */,

@@ -10,15 +10,15 @@ import Foundation
 
 public struct GraphusResponse<T> {
     
-    public var data: T
-    public var errors: [GraphusError] = []
+    public var data: T?
+    public var errors: [GraphQLError] = []
     
-    init(data: T) {
+    init(data: T?) {
         self.data = data
     }
     
     public var hasErrors: Bool {
-        return !errors.isEmpty
+        return !self.errors.isEmpty
     }
 
 }

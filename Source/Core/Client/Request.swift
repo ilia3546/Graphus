@@ -19,7 +19,7 @@ public class GraphusRequest {
     public var client: GraphusClient
     var sessionDataTask: URLSessionDataTask!
     
-    private var complectionBlock: ((Int?, Any?, Error?, [GraphusError]) -> Void)?
+    private var complectionBlock: ((Int?, Any?, Error?, [GraphQLError]) -> Void)?
     
     init(query: Query, mode: Mode, client: GraphusClient) {
         self.client = client
@@ -56,7 +56,7 @@ public class GraphusRequest {
     }
     
     
-    private func validateGraphErrors(_ data: Data, response: URLResponse?) throws -> [GraphusError] {
+    private func validateGraphErrors(_ data: Data, response: URLResponse?) throws -> [GraphQLError] {
         let currentObj = try JSONSerialization.jsonObject(with: data, options: [])
         
         if let response = currentObj as? [String: Any]{
@@ -73,16 +73,10 @@ public class GraphusRequest {
                 // Test server errors
                 throw GraphusError(errorMsg, type: .serverError, query: self.query, request: self.sessionDataTask.originalRequest)
                 
-            }else if let errors = response["errors"] as? [[String: Any]] {
+            }else if let errorsKey = self.client.rootErrorsKey,
+                let errors = response[errorsKey] as? [Any] {
                 
-                return errors.compactMap({
-                    if let errorMessage = $0["message"] as? String {
-                        return GraphusError(errorMessage, type: .graphQLError, query: self.query, request: self.sessionDataTask.originalRequest)
-                        
-                    }else{
-                        return nil
-                    }
-                })
+                return errors.compactMap({ GraphQLError($0)})
                 
             }
             
@@ -179,11 +173,11 @@ extension GraphusRequest {
                      customRootKey: String? = nil,
                            completionHandler: @escaping (Result<GraphusResponse<Any>, GraphusError>) -> Void) -> GraphusRequest.Cancelable {
         
-        if client.debugParams.contains(.logSendedRequests) {
+        if self.client.debugParams.contains(.logSendedRequests) {
             print("[Graphus] send request \"\(query.name)\"")
         }
 
-        if client.debugParams.contains(.printSendableQueries) {
+        if self.client.debugParams.contains(.printSendableQueries) {
             print("[Graphus] request query \"", mode.rawValue, query.build(), "\"")
         }
 
@@ -210,32 +204,39 @@ extension GraphusRequest {
             
             (queue ?? .main).async {
                 let key = customRootKey ?? "\(self.client.rootResponseKey).\(self.query.name)"
-                if let res = res,
-                    let data = try? self.extractObject(for: key, from: res) {
+                var data: Any?
+                if let res = res {
                     
-                    var response = GraphusResponse<Any>(data: data)
-                    response.errors = graphsErrors
-                    completionHandler(.success(response))
-                    
-                }else if let error = graphsErrors.first {
-                    completionHandler(.failure(error))
-                }else{
-                    let error = GraphusError(type: .responseDataIsNull, query: self.query, request: self.sessionDataTask.originalRequest)
-                    completionHandler(.failure(error))
+                    do{
+                        data = try self.extractObject(for: key, from: res)
+                        
+                    }catch{
+                        if let error = error as? GraphusError {
+                            completionHandler(.failure(error))
+                        }else{
+                            completionHandler(.failure(.init(type: .unknown, query: self.query, request: self.sessionDataTask.originalRequest)))
+                        }
+                        return
+                    }
                 }
+                
+                var response = GraphusResponse<Any>(data: data)
+                response.errors = graphsErrors
+                completionHandler(.success(response))
+                
             }
             
         }
 
 
-        if sessionDataTask.state == .completed {
+        if self.sessionDataTask.state == .completed {
             let urlRequest = GraphusRequest.createRequest(query: query, mode: mode, client: client)
-            sessionDataTask = client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
+            self.sessionDataTask = client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
         }
         
-        sessionDataTask.resume()
+        self.sessionDataTask.resume()
 
-        return .init(sessionDataTask)
+        return .init(self.sessionDataTask)
         
     }
 }

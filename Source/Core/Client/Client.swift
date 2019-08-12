@@ -40,6 +40,11 @@ public class GraphusClient {
     /// It is used for response mapping
     public var rootResponseKey = "data"
     
+    /// Root key for mapping errors
+    ///
+    /// The default value is "errors"
+    public var rootErrorsKey: String? = "errors"
+    
     /// Debug params
     ///
     /// You can set up debugging params
