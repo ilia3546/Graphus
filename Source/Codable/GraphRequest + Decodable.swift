@@ -15,7 +15,7 @@ extension GraphusRequest {
                                         customRootKey: String? = nil,
                                          queue: DispatchQueue? = nil,
                                          customDecoder: JSONDecoder? = nil,
-                                         completionHandler: @escaping (Result<GraphusResponse<T>, GraphusError>) -> Void) -> GraphusRequest.Cancelable {
+                                         completionHandler: @escaping (Result<GraphusResponse<T>, GraphusInternalError>) -> Void) -> GraphusRequest.Cancelable {
         
         return send(queue: .global(qos: .background), customRootKey: customRootKey) { result in
 
@@ -41,10 +41,10 @@ extension GraphusRequest {
                 
             }catch{
                 (queue ?? .main).async {
-                    if let error = error as? GraphusError {
+                    if let error = error as? GraphusInternalError {
                         completionHandler(.failure(error))
                     }else{
-                        let error = GraphusError(error, query: self.query, request: self.sessionDataTask.originalRequest)
+                        let error = GraphusInternalError(error, query: self.query, request: self.sessionDataTask.originalRequest)
                         completionHandler(.failure(error))
                     }
                 }
