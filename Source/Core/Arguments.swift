@@ -23,7 +23,7 @@ extension Dictionary: ArgumentValue where Key == String, Value == ArgumentValue 
 extension String: ArgumentValue {
     public var argumentValue: String {
         let res = self.replacingOccurrences(of: "\"", with: "\\\"")
-            .replacingOccurrences(of: "\n", with: "\\\n")
+            .replacingOccurrences(of: "\n", with: "\\n")
         return "\"\(res)\""
     }
 }
