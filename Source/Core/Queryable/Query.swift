@@ -57,7 +57,7 @@ public struct Query: Field {
         return res.joined(separator: "")
     }
     
-    internal func build() -> String {
+    public func build() -> String {
         return "{\(fieldString)}"
     }
     
