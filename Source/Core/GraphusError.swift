@@ -12,18 +12,21 @@ public enum GraphusError: Error {
     case unknownKey(String)
     case responseDataIsNull
     case serverError(String)
-    case invalidGrand(String)
+    case authentication(String)
+    case client(String)
 }
 
 extension GraphusError: LocalizedError {
     
     public var localizedDescription: String {
         switch self {
-        case .invalidGrand(let message):
+        case .authentication(let message):
             return message
         case .responseDataIsNull:
             return "Response data is null"
         case .serverError(let message):
+            return message
+        case .client(let message):
             return message
         case .unknownKey(let key):
             return "Unknown key \"\(key)\""

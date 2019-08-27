@@ -63,7 +63,7 @@ public class GraphusRequest {
             if let errorType = response["error"] as? String,
                 errorType == "invalid_grant" || errorType == "access_denied",
                 let errorDescription = response["error_description"] as? String {
-                throw GraphusError.invalidGrand(errorDescription)
+                throw GraphusError.authentication(errorDescription)
  
                 
             }else if let errorDescription = response["error_description"] as? String {
@@ -102,6 +102,37 @@ public class GraphusRequest {
             }
             
             let graphErrors = try validateGraphErrors(data, response: response)
+            
+            if let statusCode = statusCode {
+                switch statusCode {
+                case 400: throw GraphusError.client("Bad Request")
+                case 401: throw GraphusError.authentication("Unauthorized")
+                case 402: throw GraphusError.client("Payment Required")
+                case 403: throw GraphusError.authentication("Forbidden")
+                case 404: throw GraphusError.client("Not Found")
+                case 405: throw GraphusError.client("Method Not Allowed")
+                case 406: throw GraphusError.client("Not Acceptable")
+                case 407: throw GraphusError.authentication("Proxy Authentication Required")
+                case 408: throw GraphusError.client("Request Timeout")
+                case 409: throw GraphusError.client("Conflict")
+                case 410: throw GraphusError.client("Gone")
+                case 411: throw GraphusError.client("Length Required")
+                case 412: throw GraphusError.client("Precondition Failed")
+                case 413: throw GraphusError.client("Request Entity Too Large")
+                case 414: throw GraphusError.client("Request-URI Too Long")
+                case 415: throw GraphusError.client("Unsupported Media Type")
+                case 416: throw GraphusError.client("Requested Range Not Satisfiable")
+                case 417: throw GraphusError.client("Expectation Failed")
+                case 500: throw GraphusError.serverError("Internal Server Error")
+                case 501: throw GraphusError.serverError("Not Implemented")
+                case 502: throw GraphusError.serverError("Bad Gateway")
+                case 503: throw GraphusError.serverError("Service Unavailable")
+                case 504: throw GraphusError.serverError("Gateway Timeout")
+                case 505: throw GraphusError.serverError("HTTP Version Not Supported")
+                default: break
+                }
+            }
+            
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
             self.complectionBlock?(statusCode, jsonObject, nil, graphErrors)
             
