@@ -12,6 +12,8 @@ import Foundation
 public class MutationEncoder {
     
     internal var fields = [String: String]()
+    internal var uploads = [String: Upload]()
+    internal var multipleUploads = [String:[Upload]]()
     public var dateFormatter = DateFormatter()
     
     public func container() -> MutationContainer {

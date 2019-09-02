@@ -18,11 +18,27 @@ public class MutationKeyedContainer<Key: CodingKey>: MutationContainer{
         self.encodeIfPresent(value, forKey: key.stringValue)
     }
     
+    public func encodeIfPresent(_ value: Upload?, forKey key: KeyedEncodingContainer<Key>.Key) {
+        self.encodeIfPresent(value, forKey: key.stringValue)
+    }
+    
+    public func encodeIfPresent(_ value: [Upload]?, forKey key: KeyedEncodingContainer<Key>.Key) {
+        self.encodeIfPresent(value, forKey: key.stringValue)
+    }
+    
     public func encode(_ value: ArgumentValue?, forKey key: KeyedEncodingContainer<Key>.Key) {
         self.encode(value, forKey: key.stringValue)
     }
 
     public func encode(_ value: Date?, forKey key: KeyedEncodingContainer<Key>.Key) {
+        self.encode(value, forKey: key.stringValue)
+    }
+    
+    public func encode(_ value: Upload?, forKey key: KeyedEncodingContainer<Key>.Key) {
+        self.encode(value, forKey: key.stringValue)
+    }
+    
+    public func encode(_ value: [Upload]?, forKey key: KeyedEncodingContainer<Key>.Key) {
         self.encode(value, forKey: key.stringValue)
     }
 
