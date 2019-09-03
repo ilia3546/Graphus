@@ -57,7 +57,7 @@ public class GraphusClient {
     }
     
     /// Crate query request
-    public func from(_ query: Query) -> GraphusRequest {
+    public func request(_ query: Query) -> GraphusRequest {
         return .init(query: query, client: self)
     }
 

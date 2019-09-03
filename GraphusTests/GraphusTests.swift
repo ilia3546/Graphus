@@ -28,7 +28,7 @@ class GraphusTests: XCTestCase {
     func testSend() {
         let expectation = XCTestExpectation()
         let query = Query("authors", arguments: ["first":10], fields: ["firstName", "secondName"])
-        self.client.query(query).send { result in
+        self.client.request(query).send { result in
             switch result{
             case .failure(let error):
             XCTAssertNotNil(error)

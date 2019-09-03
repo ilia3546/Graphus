@@ -54,7 +54,7 @@ struct Author: Decodable, Queryable {
 let authorsQuery = Query("authors", model: Author.self)
 
 // Send request to the server & map response
-self.client.query(authorsQuery).send(mapToDecodable: [Author].self) { (result) in
+self.client.request(authorsQuery).send(mapToDecodable: [Author].self) { (result) in
 	switch result {
 	case .success(let response):
 		print("Authors", response.data)
