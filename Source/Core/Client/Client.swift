@@ -57,14 +57,10 @@ public class GraphusClient {
     }
     
     /// Crate query request
-    public func query(_ query: Query) -> GraphusRequest {
-        return .init(query: query, mode: .query, client: self)
+    public func from(_ query: Query) -> GraphusRequest {
+        return .init(query: query, client: self)
     }
-    
-    /// Create mutation request
-    public func mutation(_ query: Query) -> GraphusRequest {
-        return .init(query: query, mode: .mutation, client: self)
-    }
+
     
 }
 

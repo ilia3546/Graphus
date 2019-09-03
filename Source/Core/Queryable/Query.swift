@@ -20,6 +20,11 @@ extension String: Field {
 
 public struct Query: Field {
     
+    public  enum Mode: String {
+        case query, mutation
+    }
+    
+    public var mode: Mode = .query
     public var name: String
     public var fields: [Field]
     public var arguments = Arguments()
@@ -48,17 +53,55 @@ public struct Query: Field {
     }
     
     public var fieldString: String {
+        
         var res = [String]()
-        res.append(name)
-        if arguments.count > 0 {
-            res.append("(\(arguments.map({ "\($0): \($1.argumentValue)" }).joined(separator: ",")))")
+        res.append(self.name)
+        if !self.arguments.isEmpty {
+            let argumentsStr = self.arguments
+                .map({ "\($0): \($1.argumentValue)" })
+                .joined(separator: ",")
+            res.append("(\(argumentsStr))")
         }
-        res.append("{\(fields.map({ $0.fieldString }).joined(separator: ","))}")
+        
+        res.append("{\(self.fields.map({ $0.fieldString }).joined(separator: ","))}")
         return res.joined(separator: "")
     }
     
+    internal var uploads: [Upload] {
+        return self.uploads(in: self.arguments)
+    }
+    
+    private func uploads(in argumentsArr: Arguments) -> [Upload] {
+        var result: [Upload] = []
+        for (_, value) in argumentsArr {
+            if let value = value as? [Upload] {
+                result.append(contentsOf: value)
+            }else if let value = value as? Upload {
+                result.append(value)
+            }else if let value = value as? Mutable {
+                result.append(contentsOf: self.uploads(in: value.arguments))
+            }else if let value = value as? Arguments {
+                result.append(contentsOf: self.uploads(in: value))
+            }
+        }
+        return result
+    }
+    
     public func build() -> String {
-        return "{\(fieldString)}"
+        var result = self.mode.rawValue
+        let uploads = self.uploads
+        
+        if !uploads.isEmpty {
+            let uploadsVariables = uploads.map({ upload in
+                var res = upload.argumentValue + ": Upload"
+                if !upload.nullable { res += "!" }
+                return res
+            }).joined(separator: ", ")
+            result += " (\(uploadsVariables)) "
+        }
+        
+        result += "{\(self.fieldString)}"
+        return result
     }
     
 }

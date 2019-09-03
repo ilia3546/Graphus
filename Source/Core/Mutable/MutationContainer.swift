@@ -19,26 +19,14 @@ public class MutationContainer{
     
     public func encodeIfPresent(_ value: ArgumentValue?, forKey key: String) {
         if let value = value {
-            self.encoder.fields[key] = value.argumentValue
+            self.encoder.fields[key] = value
         }
     }
     
     public func encodeIfPresent(_ value: Date?, forKey key: String) {
         if let value = value{
             let dateValue = self.encoder.dateFormatter.string(from: value)
-            self.encoder.fields[key] = "\"\(dateValue)\""
-        }
-    }
-    
-    public func encodeIfPresent(_ value: Upload?, forKey key: String) {
-        if let value = value{
-            self.encoder.uploads[key] = value
-        }
-    }
-    
-    public func encodeIfPresent(_ value: [Upload]?, forKey key: String) {
-        if let value = value{
-            self.encoder.multipleUploads[key] = value
+            self.encoder.fields[key] = dateValue
         }
     }
     
@@ -58,33 +46,8 @@ public class MutationContainer{
         }
     }
     
-    public func encode(_ value: Upload?, forKey key: String) {
-        if let value = value {
-            self.encodeIfPresent(value, forKey: key)
-        }else{
-            self.encodeNull(forKey: key)
-        }
-    }
-    
-    public func encode(_ value: [Upload]?, forKey key: String) {
-        if let value = value {
-            self.encodeIfPresent(value, forKey: key)
-        }else{
-            self.encodeNull(forKey: key)
-        }
-    }
-    
     private func encodeNull(forKey key: String){
-        self.encoder.fields[key] = "null"
+        self.encoder.fields[key] = NSNull()
     }
     
-}
-
-public struct Upload {
-    public var data: Data
-    public var name: String
-    public init(_ data: Data, name: String) {
-        self.data = data
-        self.name = name
-    }
 }

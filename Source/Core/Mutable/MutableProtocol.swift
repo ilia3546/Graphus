@@ -15,10 +15,13 @@ public protocol Mutable: ArgumentValue {
 extension Mutable {
 
     public var argumentValue: String {
+        return self.arguments.argumentValue
+    }
+    
+    public var arguments: Arguments {
         let objectEncoder = MutationEncoder()
         mutationEncode(to: objectEncoder)
-        let objectVal = objectEncoder.fields.map({ "\($0):\($1)" }).joined(separator: ",")
-        return "{\(objectVal)}"
+        return objectEncoder.fields
     }
     
 }

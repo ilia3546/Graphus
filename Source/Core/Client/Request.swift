@@ -9,35 +9,28 @@
 import Foundation
 
 public class GraphusRequest {
-    
-    public  enum Mode: String {
-        case query, mutation
-    }
-    
-    public var mode: Mode
+
     public var query: Query
     public var client: GraphusClient
     var sessionDataTask: URLSessionDataTask!
     
     private var complectionBlock: ((Int?, Any?, Error?, [GraphQLError]) -> Void)?
     
-    init(query: Query, mode: Mode, client: GraphusClient) {
+    init(query: Query, client: GraphusClient) {
         self.client = client
         self.query = query
-        self.mode = mode
         
-        let urlRequest = GraphusRequest.createRequest(query: query, mode: mode, client: client)
+        let urlRequest = GraphusRequest.createRequest(query: query, client: client)
         self.sessionDataTask = client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
 
     }
     
-    private static func createRequest(query: Query, mode: Mode, client: GraphusClient) -> URLRequest {
+    private static func createRequest(query: Query, client: GraphusClient) -> URLRequest {
         var request = URLRequest(url: client.url)
         
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
+
         var isUserAgentExists = false
         
         if let headers = client.session.configuration.httpAdditionalHeaders,
@@ -49,12 +42,53 @@ public class GraphusRequest {
             request.addValue("Graphus /\(version)", forHTTPHeaderField: "User-Agent")
         }
         
-        let params = ["query": mode.rawValue + query.build()]
+        let makeRandom = { UInt32.random(in: (.min)...(.max)) }
+        let boundary = String(format: "------------------------%08X%08X", makeRandom(), makeRandom())
+        request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+      
+        var body = Data()
+        let queryStr = query.build().escaped
+        let variablesStr = query.uploads.map({ "\"\($0.id)\":null" }).joined(separator: ",")
+        let operations = String(format: "{\"query\": \"%@\",\"variables\": {%@}, \"operationName\": null}", queryStr, variablesStr)
+        self.append(operations, to: &body, for: "operations", boundary: boundary)
         
-        request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
+        let mapStr = query.uploads.map({
+            String(format: "\"%@\": [\"variables.%@\"]", $0.id, $0.id)
+        }).joined(separator: ",")
+        self.append("{\(mapStr)}", to: &body, for: "map", boundary: boundary)
+        for upload in query.uploads {
+            self.append(upload, to: &body, for: upload.id, boundary: boundary)
+        }
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.addValue(String(body.count), forHTTPHeaderField: "Content-Length")
+        print("Len", String(body.count))
+        request.httpBody = body
+        
+        //print(request.allHTTPHeaderFields!)
+        //print(String(data: request.httpBody!, encoding: .utf8)!)
+        
         return request
     }
     
+    private static func append(_ object: Any, to body: inout Data, for key: String, boundary: String) {
+        
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        
+        if let value = object as? String {
+            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(value)\r\n".data(using: .utf8)!)
+        }else if let value = object as? Upload {
+            body.append("Content-Disposition: form-data; name=\"\(key)\"; filename=\"\(value.name)\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: \(MimeType(path: value.name).value)\r\n\r\n".data(using: .utf8)!)
+            //print("Content-Type: \(MimeType(path: value.name).value)")
+            body.append(value.data)
+            body.append("\r\n".data(using: .utf8)!)
+        }
+        
+    }
+    
+
     
     private func validateGraphErrors(_ data: Data, response: URLResponse?) throws -> [GraphQLError] {
         let currentObj = try JSONSerialization.jsonObject(with: data, options: [])
@@ -208,7 +242,7 @@ extension GraphusRequest {
         }
 
         if self.client.debugParams.contains(.printSendableQueries) {
-            print("[Graphus] request query \"", mode.rawValue, query.build(), "\"")
+            print("[Graphus] request query \"", query.build(), "\"")
         }
 
         let startDate = Date()
@@ -244,7 +278,7 @@ extension GraphusRequest {
 
 
         if self.sessionDataTask.state == .completed {
-            let urlRequest = GraphusRequest.createRequest(query: query, mode: mode, client: client)
+            let urlRequest = GraphusRequest.createRequest(query: query, client: client)
             self.sessionDataTask = client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
         }
         
