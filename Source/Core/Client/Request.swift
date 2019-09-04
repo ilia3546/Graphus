@@ -62,11 +62,7 @@ public class GraphusRequest {
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
 
         request.addValue(String(body.count), forHTTPHeaderField: "Content-Length")
-        print("Len", String(body.count))
         request.httpBody = body
-        
-        //print(request.allHTTPHeaderFields!)
-        //print(String(data: request.httpBody!, encoding: .utf8)!)
         
         return request
     }
@@ -81,7 +77,6 @@ public class GraphusRequest {
         }else if let value = object as? Upload {
             body.append("Content-Disposition: form-data; name=\"\(key)\"; filename=\"\(value.name)\"\r\n".data(using: .utf8)!)
             body.append("Content-Type: \(MimeType(path: value.name).value)\r\n\r\n".data(using: .utf8)!)
-            //print("Content-Type: \(MimeType(path: value.name).value)")
             body.append(value.data)
             body.append("\r\n".data(using: .utf8)!)
         }
