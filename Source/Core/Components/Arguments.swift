@@ -71,10 +71,12 @@ extension String {
             switch char {
             case "\\": res += "\\\\"
             case "\n": res += "\\n"
+            case "\r": res += "\\r"
+            case "\r\n": res += "\\r\\n"
             case "\"": res += "\\\""
             default: res += "\(char)"
             }
         }
-       return res
+        return res
     }
 }
