@@ -10,10 +10,10 @@ import Foundation
 
 public class GraphusClient {
     
-    internal let configuration: URLSessionConfiguration
-    internal let url: URL
+    public let configuration: URLSessionConfiguration
+    public let url: URL
     internal lazy var session: URLSession = {
-        return URLSession(configuration: configuration)
+        return URLSession(configuration: self.configuration)
     }()
     
     /// Debug parameter
