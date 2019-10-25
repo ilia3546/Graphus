@@ -11,8 +11,10 @@ import Foundation
 
 public class MutationEncoder {
     
-    internal var fields = [String: ArgumentValue]()
+    public var fields = [String: ArgumentValue]()
     public var dateFormatter = DateFormatter()
+    
+    public init() {}
     
     public func container() -> MutationContainer {
         return MutationContainer(self)

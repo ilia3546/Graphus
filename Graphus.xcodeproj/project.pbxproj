@@ -10,7 +10,6 @@
 		F3A1431F230182AC00AF6F99 /* GraphQLError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A1431E230182AC00AF6F99 /* GraphQLError.swift */; };
 		F3A77097231E827D00339BCC /* MimeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A77096231E827D00339BCC /* MimeType.swift */; };
 		F3A77099231E82A400339BCC /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A77098231E82A400339BCC /* Upload.swift */; };
-		F3AFE9362361DB13007E156E /* Difference.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AFE9352361DB13007E156E /* Difference.swift */; };
 		F3C6FC0B2281C65F007DE0F2 /* GraphusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */; };
 		F3C6FC0D2281C65F007DE0F2 /* Graphus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DA0D6E226E05D30018ED47 /* Graphus.framework */; };
 		F3DA0D91226E064A0018ED47 /* Graphus.h in Headers */ = {isa = PBXBuildFile; fileRef = F3DA0D79226E06490018ED47 /* Graphus.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -47,7 +46,6 @@
 		F3A1431E230182AC00AF6F99 /* GraphQLError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLError.swift; sourceTree = "<group>"; };
 		F3A77096231E827D00339BCC /* MimeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MimeType.swift; sourceTree = "<group>"; };
 		F3A77098231E82A400339BCC /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
-		F3AFE9352361DB13007E156E /* Difference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Difference.swift; sourceTree = "<group>"; };
 		F3C6FC082281C65F007DE0F2 /* GraphusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphusTests.swift; sourceTree = "<group>"; };
 		F3C6FC0C2281C65F007DE0F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -103,7 +101,6 @@
 				F3A77098231E82A400339BCC /* Upload.swift */,
 				F3DA0D87226E06490018ED47 /* GraphusError.swift */,
 				F3A1431E230182AC00AF6F99 /* GraphQLError.swift */,
-				F3AFE9352361DB13007E156E /* Difference.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -334,7 +331,6 @@
 				F3DA0D99226E064A0018ED47 /* MutationContainer.swift in Sources */,
 				F3A77097231E827D00339BCC /* MimeType.swift in Sources */,
 				F3DA0D94226E064A0018ED47 /* GraphQueryKeyedContainer.swift in Sources */,
-				F3AFE9362361DB13007E156E /* Difference.swift in Sources */,
 				F3DA0D9D226E064A0018ED47 /* Query.swift in Sources */,
 				F3DA0D96226E064A0018ED47 /* MutationKeyedContainer.swift in Sources */,
 				F3DA0D9A226E064A0018ED47 /* MutableProtocol.swift in Sources */,
