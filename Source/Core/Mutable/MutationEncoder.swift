@@ -8,11 +8,13 @@
 
 import Foundation
 
+public protocol MutationContext {}
 
 public class MutationEncoder {
     
     public var fields = [String: ArgumentValue]()
     public var dateFormatter = DateFormatter()
+    public var context: MutationContext?
     
     public init() {}
     
