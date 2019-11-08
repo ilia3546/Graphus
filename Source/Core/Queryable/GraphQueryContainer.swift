@@ -33,5 +33,9 @@ public class GraphQueryContainer{
         builder.fields.append(Query(key, arguments: args, model: child, context: context))
     }
     
+    public func addUnkeyedFields(_ fields: [Field]) {
+        builder.fields.append(contentsOf: fields)
+    }
+    
 }
 

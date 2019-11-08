@@ -12,12 +12,14 @@ import Foundation
 public class QueryBuilder {
     
     /// GraphQL type fields
-    internal var fields = [Field]()
+    public var fields = [Field]()
     
     /// Query
     public func query() -> GraphQueryContainer {
         return GraphQueryContainer(self)
     }
+    
+    public init() {}
     
 }
 
