@@ -8,9 +8,7 @@
 
 import Foundation
 
-public protocol QueryBuilderContext {
-    
-}
+public protocol QueryBuilderContext {}
 
 /// GraphQL query build model protocol
 public protocol Queryable {
@@ -26,4 +24,14 @@ extension Queryable {
         buildQuery(with: builder, context: context)
         return builder.fields
     }
+}
+
+extension Array: QueryBuilderContext where Element: Field {}
+
+extension Array: Queryable where Element: Queryable {
+    
+    public static func buildQuery(with builder: QueryBuilder, context: QueryBuilderContext?) {
+        self.Element.buildQuery(with: builder, context: context)
+    }
+    
 }

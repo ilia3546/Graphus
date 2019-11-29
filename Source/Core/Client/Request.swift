@@ -10,22 +10,27 @@ import Foundation
 
 public class GraphusRequest {
 
+    public enum Mode: String {
+        case query, mutation
+    }
+    
+    public var mode: Mode
     public var query: Query
     public var client: GraphusClient
     var sessionDataTask: URLSessionDataTask!
     
     private var complectionBlock: ((Int?, Any?, Error?, [GraphQLError]) -> Void)?
     
-    init(query: Query, client: GraphusClient) {
+    init(_ mode: Mode = .query, query: Query, client: GraphusClient) {
         self.client = client
         self.query = query
+        self.mode = mode
         
-        let urlRequest = GraphusRequest.createRequest(query: query, client: client)
+        let urlRequest = GraphusRequest.createRequest(mode, query: query, client: client)
         self.sessionDataTask = client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
-
     }
     
-    private static func createRequest(query: Query, client: GraphusClient) -> URLRequest {
+    private static func createRequest(_ mode: Mode, query: Query, client: GraphusClient) -> URLRequest {
         var request = URLRequest(url: client.url)
         
         request.httpMethod = "POST"
@@ -47,7 +52,7 @@ public class GraphusRequest {
         request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
       
         var body = Data()
-        let queryStr = query.build().escaped
+        let queryStr = mode.rawValue + query.build().escaped
         let variablesStr = query.uploads.map({ "\"\($0.id)\":null" }).joined(separator: ",")
         let operations = String(format: "{\"query\": \"%@\",\"variables\": {%@}, \"operationName\": null}", queryStr, variablesStr)
         self.append(operations, to: &body, for: "operations", boundary: boundary)
@@ -237,14 +242,14 @@ extension GraphusRequest {
     @discardableResult
     public func send(queue: DispatchQueue? = nil,
                      customRootKey: String? = nil,
-                           completionHandler: @escaping (Result<GraphusResponse<Any>, Error>) -> Void) -> GraphusRequest.Cancelable {
+                     completionHandler: @escaping (Result<GraphusResponse<Any>, Error>) -> Void) -> GraphusRequest.Cancelable {
         
         if self.client.debugParams.contains(.logSendedRequests) {
-            print("[Graphus] send request \"\(query.name)\"")
+            print("[Graphus] send request \"\(self.query.name ?? "–")\"")
         }
 
         if self.client.debugParams.contains(.printSendableQueries) {
-            print("[Graphus] request query \"", query.build(), "\"")
+            print("[Graphus] request query \"", self.query.build(), "\"")
         }
 
         let startDate = Date()
@@ -253,7 +258,7 @@ extension GraphusRequest {
             
             if self.client.debugParams.contains(.logRequestAmountTime) {
                 let duration = String(format: "%.3f", Date().timeIntervalSince(startDate))
-                print("[Graphus] response for method \"\(self.query.name)\", \(statusCode ?? -999), \(duration)s")
+                print("[Graphus] response for method \"\(self.query.name ?? "–")\", \(statusCode ?? -999), \(duration)s")
             }
             
             if let error = internalError {
@@ -264,7 +269,13 @@ extension GraphusRequest {
             }
             
             (queue ?? .main).async {
-                let key = customRootKey ?? "\(self.client.rootResponseKey).\(self.query.name)"
+                
+                var key = customRootKey ?? "\(self.client.rootResponseKey)"
+                
+                if let queryName = self.query.alias ?? self.query.name {
+                    key += ".\(queryName)"
+                }
+                
                 var data: Any?
                 if let res = res {
                     data = try? self.extractObject(for: key, from: res)
@@ -280,8 +291,8 @@ extension GraphusRequest {
 
 
         if self.sessionDataTask.state == .completed {
-            let urlRequest = GraphusRequest.createRequest(query: query, client: client)
-            self.sessionDataTask = client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
+            let urlRequest = GraphusRequest.createRequest(self.mode, query: self.query, client: self.client)
+            self.sessionDataTask = self.client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
         }
         
         self.sessionDataTask.resume()

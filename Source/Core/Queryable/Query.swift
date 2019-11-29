@@ -18,30 +18,39 @@ extension String: Field {
     }
 }
 
-public struct Query: Field {
+public class Query: Field {
     
-    public  enum Mode: String {
-        case query, mutation
-    }
-    
-    public var mode: Mode = .query
-    public var name: String
+    public var name: String?
+    public var alias: String?
     public var fields: [Field]
     public var arguments = Arguments()
     
-    public init(_ name: String, arguments: Arguments? = nil, fields: [Field]) {
-        self.name = name
+    private init(fields: [Field] = []) {
         self.fields = fields
-        self.arguments = arguments ?? [:]
     }
     
-    public init(_ name: String, arguments: Arguments? = nil, model: Queryable.Type, context: QueryBuilderContext? = nil) {
-        self.init(name, arguments: arguments, fields: model.fields(with: context))
+    public static func unnamed(fields: [Field]) -> Query {
+        return Query(fields: fields)
     }
     
-    public mutating func appendArguments(_ newArgs: Arguments?){
+    public static func unnamed(model: Queryable.Type, context: QueryBuilderContext? = nil) -> Query {
+        return Query(fields: model.fields(with: context))
+    }
+    
+    public init(_ name: String, alias: String? = nil, arguments: Arguments = [:], fields: [Field] = []) {
+        self.name = name
+        self.alias = alias
+        self.fields = fields
+        self.arguments = arguments
+    }
+    
+    public convenience init(_ name: String, alias: String? = nil, arguments: Arguments = [:], model: Queryable.Type, context: QueryBuilderContext? = nil) {
+        self.init(name, alias: alias, arguments: arguments, fields: model.fields(with: context))
+    }
+    
+    public func appendArguments(_ newArgs: Arguments?){
         if let newArgs = newArgs {
-            arguments.merge(newArgs, uniquingKeysWith: merge)
+            self.arguments.merge(newArgs, uniquingKeysWith: merge)
         }
     }
     
@@ -55,15 +64,26 @@ public struct Query: Field {
     public var fieldString: String {
         
         var res = [String]()
-        res.append(self.name)
+        
+        guard let name = self.name else {
+            return self.fields.map({ $0.fieldString }).joined(separator: ",")
+        }
+        
+        if let alias = self.alias {
+            res.append("\(alias): \(name)")
+        } else {
+            res.append(name)
+        }
         if !self.arguments.isEmpty {
             let argumentsStr = self.arguments
                 .map({ "\($0): \($1.argumentValue)" })
                 .joined(separator: ",")
             res.append("(\(argumentsStr))")
         }
+        if !self.fields.isEmpty {
+            res.append("{\(self.fields.map({ $0.fieldString }).joined(separator: ","))}")
+        }
         
-        res.append("{\(self.fields.map({ $0.fieldString }).joined(separator: ","))}")
         return res.joined(separator: "")
     }
     
@@ -88,7 +108,7 @@ public struct Query: Field {
     }
     
     public func build() -> String {
-        var result = self.mode.rawValue
+        var result = ""
         let uploads = self.uploads
         
         if !uploads.isEmpty {

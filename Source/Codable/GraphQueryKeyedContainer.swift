@@ -8,22 +8,19 @@
 
 import Foundation
 
-
 /// GraphQL query
 public class GraphQueryKeyedContainer<Key: CodingKey>: GraphQueryContainer{
     
-    /// Add simple graphQL field
-    public func addField(_ key: Key){
-        addField(key.stringValue)
+    public func addField(_ keyedField: Key){
+        super.addField(keyedField.stringValue)
     }
     
-    public func addFields(_ childFields: [Field], with args: Arguments? = nil, forKey key: Key) {
-        addFields(childFields, with: args, forKey: key.stringValue)
+    public func addFields(_ keyedFields: [Key]){
+        super.addFields(keyedFields.map({ $0.stringValue }))
     }
     
-    /// Add child query
-    public func addChild(_ child: Queryable.Type, context: QueryBuilderContext? = nil, with args: Arguments? = nil, forKey key: Key){
-        addChild(child, context: context, with: args, forKey: key.stringValue)
+    public func addField(_ keyedQuery: KeyedQuery<Key>){
+        super.addField(keyedQuery)
     }
     
 }
