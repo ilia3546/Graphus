@@ -272,7 +272,7 @@ extension GraphusRequest {
                 
                 var key = customRootKey ?? "\(self.client.rootResponseKey)"
                 
-                if let queryName = self.query.alias ?? self.query.name {
+                if customRootKey == nil, let queryName = self.query.alias ?? self.query.name {
                     key += ".\(queryName)"
                 }
                 
