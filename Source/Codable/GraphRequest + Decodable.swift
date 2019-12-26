@@ -35,11 +35,13 @@ extension GraphusRequest {
                 var newResponse = GraphusResponse<T>(data: mappedData)
                 newResponse.errors = response.errors
                 
+                guard self.sessionDataTask.state != .canceling else { return }
                 (queue ?? .main).async {
                     completionHandler(.success(newResponse))
                 }
                 
             }catch{
+                guard self.sessionDataTask.state != .canceling else { return }
                 (queue ?? .main).async {
                     completionHandler(.failure(error))
                 }

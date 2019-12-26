@@ -262,6 +262,7 @@ extension GraphusRequest {
             }
             
             if let error = internalError {
+                guard self.sessionDataTask.state != .canceling else { return }
                 (queue ?? .main).async {
                     completionHandler(.failure(error))
                 }
@@ -283,6 +284,8 @@ extension GraphusRequest {
                 
                 var response = GraphusResponse<Any>(data: data)
                 response.errors = graphsErrors
+                
+                guard self.sessionDataTask.state != .canceling else { return }
                 completionHandler(.success(response))
                 
             }
