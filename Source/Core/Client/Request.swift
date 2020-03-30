@@ -234,8 +234,6 @@ extension GraphusRequest {
     }
 }
 
-
-
 // Native
 extension GraphusRequest {
     
@@ -244,22 +242,13 @@ extension GraphusRequest {
                      customRootKey: String? = nil,
                      completionHandler: @escaping (Result<GraphusResponse<Any>, Error>) -> Void) -> GraphusRequest.Cancelable {
         
-        if self.client.debugParams.contains(.logSendedRequests) {
-            print("[Graphus] send request \"\(self.query.name ?? "–")\"")
-        }
-
-        if self.client.debugParams.contains(.printSendableQueries) {
-            print("[Graphus] request query \"", self.query.build(), "\"")
-        }
+        self.client.logger.querySended(mode: self.mode, name: self.query.name ?? "?", queryString: self.query.build())
 
         let startDate = Date()
         
         self.complectionBlock = { statusCode, res, internalError, graphsErrors in
             
-            if self.client.debugParams.contains(.logRequestAmountTime) {
-                let duration = String(format: "%.3f", Date().timeIntervalSince(startDate))
-                print("[Graphus] response for method \"\(self.query.name ?? "–")\", \(statusCode ?? -999), \(duration)s")
-            }
+            self.client.logger.responseRecived(name: self.query.name ?? "?", statusCode: statusCode ?? -999, duration: Date().timeIntervalSince(startDate))
             
             if let error = internalError {
                 guard self.sessionDataTask.state != .canceling else { return }

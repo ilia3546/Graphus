@@ -31,6 +31,7 @@
 		F3DA0DA1226E064A0018ED47 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D8E226E06490018ED47 /* Response.swift */; };
 		F3DA0DA2226E064A0018ED47 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D8F226E06490018ED47 /* Client.swift */; };
 		F3DA0DA3226E064A0018ED47 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D90226E06490018ED47 /* Request.swift */; };
+		F3EAEB4B2432173D0026CBFB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EAEB4A2432173D0026CBFB /* Logger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		F3DA0DA4226E07530018ED47 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		F3DA0DA5226E07530018ED47 /* Graphus.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Graphus.podspec; sourceTree = SOURCE_ROOT; };
 		F3DA0DA6226E07530018ED47 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		F3EAEB4A2432173D0026CBFB /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 				F3A77098231E82A400339BCC /* Upload.swift */,
 				F3DA0D87226E06490018ED47 /* GraphusError.swift */,
 				F3A1431E230182AC00AF6F99 /* GraphQLError.swift */,
+				F3EAEB4A2432173D0026CBFB /* Logger.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3DA0DA0226E064A0018ED47 /* QueryBuilder.swift in Sources */,
+				F3EAEB4B2432173D0026CBFB /* Logger.swift in Sources */,
 				F3DA0D9B226E064A0018ED47 /* Arguments.swift in Sources */,
 				F3DA0D9C226E064A0018ED47 /* GraphusError.swift in Sources */,
 				F3DA0D97226E064A0018ED47 /* MutationEncoder + Coding.swift in Sources */,

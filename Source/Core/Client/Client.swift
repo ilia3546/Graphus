@@ -16,25 +16,6 @@ public class GraphusClient {
         return URLSession(configuration: self.configuration)
     }()
     
-    /// Debug parameter
-    public enum DebugParam {
-        
-        /// Log request when it's sended
-        ///
-        /// Example: `[Graphus] send request "createBook"`
-        case logSendedRequests
-        
-        /// Log request amount time and code when it's recived
-        ///
-        /// Example: `[Graphus] response for method "createBook", 200, 1.197s`
-        case logRequestAmountTime
-        
-        /// Print sendable queries into console
-        ///
-        /// Example: `[Graphus] request query "mutation {createBook(title: "Francis Scott Key Fitzgerald",author: "The Great Gatsby"){id,title,author,isbn,url}}"`
-        case printSendableQueries
-    }
-    
     /// Root response key
     ///
     /// It is used for response mapping
@@ -45,15 +26,16 @@ public class GraphusClient {
     /// The default value is "errors"
     public var rootErrorsKey: String? = "errors"
     
-    /// Debug params
+    /// Logger
     ///
     /// You can set up debugging params
-    public var debugParams: [DebugParam] = []
+    public var logger: GraphusLoggerProtocol
     
     /// Create graphus client
     public init(url: URL, configuration: URLSessionConfiguration){
         self.configuration = configuration
         self.url = url
+        self.logger = GraphusLogger()
     }
     
     /// Crate query request
@@ -63,5 +45,3 @@ public class GraphusClient {
 
     
 }
-
-
