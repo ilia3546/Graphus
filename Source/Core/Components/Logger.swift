@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 public protocol GraphusLoggerProtocol {
     func querySended(mode: GraphusRequest.Mode, name: String, queryString: String)
@@ -16,11 +17,11 @@ public protocol GraphusLoggerProtocol {
 internal class GraphusLogger: GraphusLoggerProtocol {
     
     func querySended(mode: GraphusRequest.Mode, name: String, queryString: String) {
-        NSLog("[Graphus] Query \"%@\" sended: %@ %@", name, mode.rawValue, queryString)
+        os_log("[Graphus] Query \"%@\" sended: %@ %@", name, mode.rawValue, queryString)
     }
     
     func responseRecived(name: String, statusCode: Int, duration: TimeInterval) {
-        NSLog("[Graphus] Response \"%@\" recived. Code: %d. Duration: %.3f", name, statusCode, duration)
+        os_log("[Graphus] Response \"%@\" recived. Code: %d. Duration: %.3f", name, statusCode, duration)
     }
     
 }
