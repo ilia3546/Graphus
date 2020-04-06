@@ -20,12 +20,17 @@ extension Mutable {
     
     public var arguments: Arguments {
         let objectEncoder = MutationEncoder()
+        if let differetable = self as? Differentable {
+            objectEncoder.changeSet = differetable.changeSet
+            let fieldsBuilder = FieldsBuilder()
+            differetable.alwaysSendUnchangedFields(with: fieldsBuilder)
+            objectEncoder.changeExceptFields = fieldsBuilder.fields
+        }
         mutationEncode(to: objectEncoder)
         return objectEncoder.fields
     }
     
 }
-
 
 public protocol MutableEnum: ArgumentValue {
     var rawValue: String { get }

@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		F32BB32F23911CD7005C01D6 /* KeyedQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32BB32E23911CD7005C01D6 /* KeyedQuery.swift */; };
+		F34B32922437352200A68DA6 /* ChangeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B32912437352200A68DA6 /* ChangeSet.swift */; };
+		F34B32942437680700A68DA6 /* Differentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B32932437680700A68DA6 /* Differentable.swift */; };
+		F34B32972437682200A68DA6 /* FieldsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B32962437682200A68DA6 /* FieldsBuilder.swift */; };
+		F34B32992437682C00A68DA6 /* FieldsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B32982437682C00A68DA6 /* FieldsContainer.swift */; };
+		F34B329B2437683700A68DA6 /* FieldsKeyedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B329A2437683700A68DA6 /* FieldsKeyedContainer.swift */; };
+		F34B329D2437684000A68DA6 /* Change.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B329C2437684000A68DA6 /* Change.swift */; };
+		F34B329F2437686100A68DA6 /* FieldsBuilder + Coding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B329E2437686100A68DA6 /* FieldsBuilder + Coding.swift */; };
 		F3A1431F230182AC00AF6F99 /* GraphQLError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A1431E230182AC00AF6F99 /* GraphQLError.swift */; };
 		F3A77097231E827D00339BCC /* MimeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A77096231E827D00339BCC /* MimeType.swift */; };
 		F3A77099231E82A400339BCC /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A77098231E82A400339BCC /* Upload.swift */; };
@@ -46,6 +53,13 @@
 
 /* Begin PBXFileReference section */
 		F32BB32E23911CD7005C01D6 /* KeyedQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedQuery.swift; sourceTree = "<group>"; };
+		F34B32912437352200A68DA6 /* ChangeSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSet.swift; sourceTree = "<group>"; };
+		F34B32932437680700A68DA6 /* Differentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Differentable.swift; sourceTree = "<group>"; };
+		F34B32962437682200A68DA6 /* FieldsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldsBuilder.swift; sourceTree = "<group>"; };
+		F34B32982437682C00A68DA6 /* FieldsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldsContainer.swift; sourceTree = "<group>"; };
+		F34B329A2437683700A68DA6 /* FieldsKeyedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldsKeyedContainer.swift; sourceTree = "<group>"; };
+		F34B329C2437684000A68DA6 /* Change.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Change.swift; sourceTree = "<group>"; };
+		F34B329E2437686100A68DA6 /* FieldsBuilder + Coding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FieldsBuilder + Coding.swift"; sourceTree = "<group>"; };
 		F3A1431E230182AC00AF6F99 /* GraphQLError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLError.swift; sourceTree = "<group>"; };
 		F3A77096231E827D00339BCC /* MimeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MimeType.swift; sourceTree = "<group>"; };
 		F3A77098231E82A400339BCC /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
@@ -97,6 +111,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F34B32952437680C00A68DA6 /* Differentable */ = {
+			isa = PBXGroup;
+			children = (
+				F34B32912437352200A68DA6 /* ChangeSet.swift */,
+				F34B32932437680700A68DA6 /* Differentable.swift */,
+				F34B32962437682200A68DA6 /* FieldsBuilder.swift */,
+				F34B32982437682C00A68DA6 /* FieldsContainer.swift */,
+				F34B329C2437684000A68DA6 /* Change.swift */,
+			);
+			path = Differentable;
+			sourceTree = "<group>";
+		};
 		F3881BFB231E9F29008E37BF /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +186,8 @@
 				F3DA0D7F226E06490018ED47 /* MutationKeyedContainer.swift */,
 				F32BB32E23911CD7005C01D6 /* KeyedQuery.swift */,
 				F3DA0D80226E06490018ED47 /* MutationEncoder + Coding.swift */,
+				F34B329A2437683700A68DA6 /* FieldsKeyedContainer.swift */,
+				F34B329E2437686100A68DA6 /* FieldsBuilder + Coding.swift */,
 			);
 			name = Codable;
 			path = Source/Codable;
@@ -168,6 +196,7 @@
 		F3DA0D81226E06490018ED47 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				F34B32952437680C00A68DA6 /* Differentable */,
 				F3881BFB231E9F29008E37BF /* Components */,
 				F3DA0D82226E06490018ED47 /* Mutable */,
 				F3DA0D88226E06490018ED47 /* Queryable */,
@@ -333,17 +362,24 @@
 				F3A1431F230182AC00AF6F99 /* GraphQLError.swift in Sources */,
 				F3DA0DA1226E064A0018ED47 /* Response.swift in Sources */,
 				F3DA0D9F226E064A0018ED47 /* QueryableProtocol.swift in Sources */,
+				F34B329F2437686100A68DA6 /* FieldsBuilder + Coding.swift in Sources */,
 				F3DA0DA2226E064A0018ED47 /* Client.swift in Sources */,
 				F3DA0DA3226E064A0018ED47 /* Request.swift in Sources */,
 				F3DA0D9E226E064A0018ED47 /* GraphQueryContainer.swift in Sources */,
+				F34B329B2437683700A68DA6 /* FieldsKeyedContainer.swift in Sources */,
 				F3DA0D99226E064A0018ED47 /* MutationContainer.swift in Sources */,
+				F34B329D2437684000A68DA6 /* Change.swift in Sources */,
 				F3A77097231E827D00339BCC /* MimeType.swift in Sources */,
 				F3DA0D94226E064A0018ED47 /* GraphQueryKeyedContainer.swift in Sources */,
 				F32BB32F23911CD7005C01D6 /* KeyedQuery.swift in Sources */,
 				F3DA0D9D226E064A0018ED47 /* Query.swift in Sources */,
 				F3DA0D96226E064A0018ED47 /* MutationKeyedContainer.swift in Sources */,
+				F34B32942437680700A68DA6 /* Differentable.swift in Sources */,
+				F34B32922437352200A68DA6 /* ChangeSet.swift in Sources */,
+				F34B32972437682200A68DA6 /* FieldsBuilder.swift in Sources */,
 				F3DA0D9A226E064A0018ED47 /* MutableProtocol.swift in Sources */,
 				F3A77099231E82A400339BCC /* Upload.swift in Sources */,
+				F34B32992437682C00A68DA6 /* FieldsContainer.swift in Sources */,
 				F3DA0D98226E064A0018ED47 /* MutationEncoder.swift in Sources */,
 				F3DA0D93226E064A0018ED47 /* QueryBuilder + Coding.swift in Sources */,
 				F3DA0D95226E064A0018ED47 /* GraphRequest + Decodable.swift in Sources */,
@@ -540,7 +576,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.0;
+				MARKETING_VERSION = 1.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bluetech.Graphus;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -568,7 +604,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.0;
+				MARKETING_VERSION = 1.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bluetech.Graphus;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

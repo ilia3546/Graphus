@@ -8,8 +8,7 @@
 
 import Foundation
 
-
-public class MutationContainer{
+public class MutationContainer {
     
     fileprivate var encoder: MutationEncoder
     
@@ -17,21 +16,47 @@ public class MutationContainer{
         self.encoder = encoder
     }
     
+    fileprivate func differenceEncode<T>(_ value: T?, forKey key: String, _ complection: (T?) -> Void) {
+        
+        guard let changeSet = self.encoder.changeSet, !self.encoder.changeExceptFields.contains(key) else {
+            complection(value)
+            return
+        }
+        
+        if let change = changeSet.first(where: key) {
+            if let rootChange = change as? RootChange {
+                if var value = value as? Differentable {
+                    value.changeSet = ChangeSet(changes: rootChange.childChanges)
+                    complection(value as? T)
+                } else {
+                    complection(value)
+                }
+            } else if let fieldChange = change as? FieldChange {
+                complection(fieldChange.newValue as? T ?? value)
+            }
+        }
+        
+    }
+    
     public func encodeIfPresent(_ value: ArgumentValue?, forKey key: String) {
         if let value = value {
-            self.encoder.fields[key] = value
+            self.differenceEncode(value, forKey: key) { value in
+                self.encoder.fields[key] = value
+            }
         }
     }
     
     public func encodeIfPresent(_ value: Date?, forKey key: String) {
         if let value = value{
             let dateValue = self.encoder.dateFormatter.string(from: value)
-            self.encoder.fields[key] = dateValue
+            self.differenceEncode(dateValue, forKey: key) { value in
+                self.encoder.fields[key] = dateValue
+            }
         }
     }
     
     public func encode(_ value: ArgumentValue?, forKey key: String) {
-        if let value = value{
+        if let value = value {
             self.encodeIfPresent(value, forKey: key)
         }else{
             self.encodeNull(forKey: key)
@@ -47,7 +72,9 @@ public class MutationContainer{
     }
     
     private func encodeNull(forKey key: String){
-        self.encoder.fields[key] = NSNull()
+        self.differenceEncode(NSNull(), forKey: key) { value in
+            self.encoder.fields[key] = value
+        }
     }
     
 }

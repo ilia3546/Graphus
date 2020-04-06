@@ -14,8 +14,10 @@ public class MutationEncoder {
     
     public var fields = [String: ArgumentValue]()
     public var dateFormatter = DateFormatter()
-    public var context: MutationContext?
-    
+    public var isChangesetReloading: Bool = false
+    internal var changeSet: ChangeSet?
+    internal var changeExceptFields: [String] = []
+
     public init() {}
     
     public func container() -> MutationContainer {
