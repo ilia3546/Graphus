@@ -18,7 +18,7 @@ public class MutationContainer {
     
     fileprivate func differenceEncode<T>(_ value: T?, forKey key: String, _ complection: (T?) -> Void) {
         
-        guard let changeSet = self.encoder.changeSet, !self.encoder.changeExceptFields.contains(key) else {
+        guard let changeSet = self.encoder.changeSet else {
             complection(value)
             return
         }
@@ -33,7 +33,11 @@ public class MutationContainer {
                 }
             } else if let fieldChange = change as? FieldChange {
                 complection(fieldChange.newValue as? T ?? value)
+            } else if self.encoder.changeExceptFields.contains(key) {
+                complection(value)
             }
+        } else if self.encoder.changeExceptFields.contains(key) {
+            complection(value)
         }
         
     }
