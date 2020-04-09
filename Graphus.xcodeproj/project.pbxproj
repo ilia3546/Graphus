@@ -18,6 +18,7 @@
 		F3A1431F230182AC00AF6F99 /* GraphQLError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A1431E230182AC00AF6F99 /* GraphQLError.swift */; };
 		F3A77097231E827D00339BCC /* MimeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A77096231E827D00339BCC /* MimeType.swift */; };
 		F3A77099231E82A400339BCC /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A77098231E82A400339BCC /* Upload.swift */; };
+		F3C6D3D5243F731C004316A6 /* OnQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C6D3D4243F731C004316A6 /* OnQuery.swift */; };
 		F3C6FC0B2281C65F007DE0F2 /* GraphusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */; };
 		F3C6FC0D2281C65F007DE0F2 /* Graphus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DA0D6E226E05D30018ED47 /* Graphus.framework */; };
 		F3DA0D91226E064A0018ED47 /* Graphus.h in Headers */ = {isa = PBXBuildFile; fileRef = F3DA0D79226E06490018ED47 /* Graphus.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -63,6 +64,7 @@
 		F3A1431E230182AC00AF6F99 /* GraphQLError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLError.swift; sourceTree = "<group>"; };
 		F3A77096231E827D00339BCC /* MimeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MimeType.swift; sourceTree = "<group>"; };
 		F3A77098231E82A400339BCC /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
+		F3C6D3D4243F731C004316A6 /* OnQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnQuery.swift; sourceTree = "<group>"; };
 		F3C6FC082281C65F007DE0F2 /* GraphusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphusTests.swift; sourceTree = "<group>"; };
 		F3C6FC0C2281C65F007DE0F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				F3DA0D89226E06490018ED47 /* Query.swift */,
+				F3C6D3D4243F731C004316A6 /* OnQuery.swift */,
 				F3DA0D8A226E06490018ED47 /* GraphQueryContainer.swift */,
 				F3DA0D8B226E06490018ED47 /* QueryableProtocol.swift */,
 				F3DA0D8C226E06490018ED47 /* QueryBuilder.swift */,
@@ -369,6 +372,7 @@
 				F34B329B2437683700A68DA6 /* FieldsKeyedContainer.swift in Sources */,
 				F3DA0D99226E064A0018ED47 /* MutationContainer.swift in Sources */,
 				F34B329D2437684000A68DA6 /* Change.swift in Sources */,
+				F3C6D3D5243F731C004316A6 /* OnQuery.swift in Sources */,
 				F3A77097231E827D00339BCC /* MimeType.swift in Sources */,
 				F3DA0D94226E064A0018ED47 /* GraphQueryKeyedContainer.swift in Sources */,
 				F32BB32F23911CD7005C01D6 /* KeyedQuery.swift in Sources */,

@@ -9,18 +9,38 @@
 import Foundation
 
 /// GraphQL query
-public class GraphQueryKeyedContainer<Key: CodingKey>: GraphQueryContainer{
+public class GraphQueryKeyedContainer<Key: CodingKey> {
+    
+    internal var builder: QueryBuilder
+    
+    internal init(_ builder: QueryBuilder){
+        self.builder = builder
+    }
+    
+    public func addField(_ field: Field){
+        self.builder.fields.append(field)
+    }
+    
+    public func addFields(_ fields: [Field]){
+        self.builder.fields.append(contentsOf: fields)
+    }
     
     public func addField(_ keyedField: Key){
-        super.addField(keyedField.stringValue)
+        self.addField(keyedField.stringValue)
     }
     
     public func addFields(_ keyedFields: [Key]){
-        super.addFields(keyedFields.map({ $0.stringValue }))
+        self.addFields(keyedFields.map({ $0.stringValue }))
+    }
+   
+    public func addField(_ keyedQuery: KeyedQuery<Key>){
+        self.addField(keyedQuery as Field)
     }
     
-    public func addField(_ keyedQuery: KeyedQuery<Key>){
-        super.addField(keyedQuery)
+    public func on(_ typeName: String, keyedClosure: @escaping (GraphQueryKeyedContainer) -> Void) {
+        let builder = QueryBuilder()
+        keyedClosure(builder.query(keyedBy: Key.self))
+        self.builder.fields.append(OnQuery(typeName: typeName, fields: builder.fields))
     }
     
 }

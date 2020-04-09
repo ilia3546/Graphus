@@ -84,7 +84,7 @@ public class Query: Field {
             res.append("{\(self.fields.map({ $0.fieldString }).joined(separator: ","))}")
         }
         
-        return res.joined(separator: "")
+        return res.joined()
     }
     
     internal var uploads: [Upload] {

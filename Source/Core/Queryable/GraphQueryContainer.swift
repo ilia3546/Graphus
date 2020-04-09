@@ -9,7 +9,7 @@
 import Foundation
 
 /// GraphQL query
-public class GraphQueryContainer{
+public class GraphQueryContainer {
     
     internal var builder: QueryBuilder
     
@@ -23,6 +23,12 @@ public class GraphQueryContainer{
     
     public func addFields(_ fields: [Field]){
         self.builder.fields.append(contentsOf: fields)
+    }
+    
+    public func on(_ typeName: String, closure: @escaping (GraphQueryContainer) -> Void) {
+        let builder = QueryBuilder()
+        closure(builder.query())
+        self.builder.fields.append(OnQuery(typeName: typeName, fields: builder.fields))
     }
 
 }
