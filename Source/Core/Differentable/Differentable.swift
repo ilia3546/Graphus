@@ -15,4 +15,9 @@ public protocol Differentable: Mutable {
 
 extension Differentable {
     public func alwaysSendUnchangedFields(with builder: FieldsBuilder) {}
+    internal var alwaysSendableUnchangedFields: [String] {
+        let fieldsBuilder = FieldsBuilder()
+        self.alwaysSendUnchangedFields(with: fieldsBuilder)
+        return fieldsBuilder.fields
+    }
 }

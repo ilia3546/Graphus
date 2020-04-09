@@ -33,11 +33,7 @@ public class MutationContainer {
                 }
             } else if let fieldChange = change as? FieldChange {
                 complection(fieldChange.newValue as? T ?? value)
-            } else if self.encoder.changeExceptFields.contains(key) {
-                complection(value)
             }
-        } else if self.encoder.changeExceptFields.contains(key) {
-            complection(value)
         }
         
     }

@@ -10,12 +10,14 @@ import Foundation
 
 public protocol Change {
     var key: String { get set }
+    var isForcedToSend: Bool { get set }
     func print(padding: Int)
 }
 
 public struct FieldChange: Change, Hashable, Equatable {
     
     public var key: String
+    public var isForcedToSend: Bool = false
     public let oldValue: ArgumentValue
     public let newValue: ArgumentValue
     
@@ -30,7 +32,7 @@ public struct FieldChange: Change, Hashable, Equatable {
     public func print(padding: Int) {
         var paddingStr = ""
         for _ in 0 ..< padding { paddingStr += "\t" }
-        Swift.print(paddingStr, ".\(self.key) | ", self.oldValue.argumentValue, "->", self.newValue.argumentValue)
+        Swift.print(paddingStr, ".\(self.key + (self.isForcedToSend ? "*" : "")) | ", self.oldValue.argumentValue, "->", self.newValue.argumentValue)
     }
     
 }
@@ -38,6 +40,7 @@ public struct FieldChange: Change, Hashable, Equatable {
 public struct RootChange: Change, Hashable, Equatable {
     
     public var key: String
+    public var isForcedToSend: Bool = false
     public let childChanges: [Change]
     
     public static func == (lhs: RootChange, rhs: RootChange) -> Bool {
@@ -51,7 +54,7 @@ public struct RootChange: Change, Hashable, Equatable {
     public func print(padding: Int) {
         var paddingStr = ""
         for _ in 0..<padding { paddingStr += "\t" }
-        Swift.print(paddingStr, ".\(self.key) | [")
+        Swift.print(paddingStr, ".\(self.key + (self.isForcedToSend ? "*" : "")) | [")
         for childChange in self.childChanges {
             childChange.print(padding: padding + 1)
         }

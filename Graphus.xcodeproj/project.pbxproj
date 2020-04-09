@@ -114,11 +114,11 @@
 		F34B32952437680C00A68DA6 /* Differentable */ = {
 			isa = PBXGroup;
 			children = (
+				F34B329C2437684000A68DA6 /* Change.swift */,
 				F34B32912437352200A68DA6 /* ChangeSet.swift */,
 				F34B32932437680700A68DA6 /* Differentable.swift */,
 				F34B32962437682200A68DA6 /* FieldsBuilder.swift */,
 				F34B32982437682C00A68DA6 /* FieldsContainer.swift */,
-				F34B329C2437684000A68DA6 /* Change.swift */,
 			);
 			path = Differentable;
 			sourceTree = "<group>";

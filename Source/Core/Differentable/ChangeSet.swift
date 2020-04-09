@@ -50,28 +50,39 @@ public struct ChangeSet: Codable {
                 changes.append(FieldChange(key: newField.key, oldValue: NSNull(), newValue: newField.value))
                 continue
             }
-            
+                        
             // Compare mutable object
             if let oldValue = oldField.value as? Differentable, let newValue = newField.value as? Differentable {
                 let childChangeSet = ChangeSet(from: oldValue, to: newValue)
-                if !childChangeSet.isEmpty {
-                    changes.append(RootChange(key: newField.key, childChanges: childChangeSet.changes))
+                var rootChange = RootChange(key: newField.key, childChanges: childChangeSet.changes)
+                if childChangeSet.hasChangedFields {
+                    changes.append(rootChange)
+                } else if newObject.alwaysSendableUnchangedFields.contains(newField.key) {
+                    rootChange.isForcedToSend = true
+                    changes.append(rootChange)
                 }
                 continue
             }
             
             // Compare hashable object
             if let oldValue = (oldField.value as Any) as? AnyHashable, let newValue = (newField.value as Any) as? AnyHashable {
+                var fieldChange = FieldChange(key: newField.key, oldValue: oldField.value, newValue: newField.value)
                 if oldValue != newValue {
-                    changes.append(FieldChange(key: newField.key, oldValue: oldField.value, newValue: newField.value))
+                    changes.append(fieldChange)
+                } else if newObject.alwaysSendableUnchangedFields.contains(newField.key) {
+                    fieldChange.isForcedToSend = true
+                    changes.append(fieldChange)
                 }
                 continue
             }
             
             // Compare argument values
+            var fieldChange = FieldChange(key: newField.key, oldValue: oldField.value, newValue: newField.value)
             if oldField.value.argumentValue != newField.value.argumentValue {
-                changes.append(FieldChange(key: newField.key, oldValue: oldField.value, newValue: newField.value))
-                continue
+                changes.append(fieldChange)
+            } else if newObject.alwaysSendableUnchangedFields.contains(newField.key) {
+                fieldChange.isForcedToSend = true
+                changes.append(fieldChange)
             }
             
         }
@@ -88,8 +99,8 @@ public struct ChangeSet: Codable {
         return self.contains(key.stringValue)
     }
     
-    public var isEmpty: Bool {
-        return self.changes.isEmpty
+    public var hasChangedFields: Bool {
+        return !self.changes.filter({ !$0.isForcedToSend }).isEmpty
     }
     
     public func debugPrint() {

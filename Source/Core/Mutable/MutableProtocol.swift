@@ -13,7 +13,7 @@ public protocol Mutable: ArgumentValue {
 }
 
 extension Mutable {
-
+    
     public var argumentValue: String {
         return self.arguments.argumentValue
     }
@@ -22,9 +22,6 @@ extension Mutable {
         let objectEncoder = MutationEncoder()
         if let differetable = self as? Differentable {
             objectEncoder.changeSet = differetable.changeSet
-            let fieldsBuilder = FieldsBuilder()
-            differetable.alwaysSendUnchangedFields(with: fieldsBuilder)
-            objectEncoder.changeExceptFields = fieldsBuilder.fields
         }
         mutationEncode(to: objectEncoder)
         return objectEncoder.fields
