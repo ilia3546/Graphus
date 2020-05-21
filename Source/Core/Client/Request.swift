@@ -11,10 +11,10 @@ import Alamofire
 
 public class GraphusRequest {
 
-    public var mode: Mode
-    public var query: Query
-    private var clientReference: GraphusClient
+    public private(set) var mode: Mode
+    public private(set) var query: Query
     
+    internal var clientReference: GraphusClient
     internal let request: Alamofire.DataRequest
     
     init(_ mode: Mode = .query, query: Query, clientReference: GraphusClient) {
@@ -27,10 +27,8 @@ public class GraphusRequest {
             let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             httpHeaders.add(name: "User-Agent", value: "Graphus /\(version)")
         }
-
-        self.request = clientReference.session.request(clientReference.url, interceptor: clientReference.configuration.interceptor)
         
-        /*self.request = clientReference.session.upload(multipartFormData: { multipartFormData in
+        self.request = clientReference.session.upload(multipartFormData: { multipartFormData in
             
             let queryStr = mode.rawValue + query.build().escaped
             let variablesStr = query.uploads.map({ "\"\($0.id)\":null" }).joined(separator: ",")
@@ -48,16 +46,14 @@ public class GraphusRequest {
             }
             
             for upload in query.uploads {
-                multipartFormData.append(upload.data, withName: upload.id)
+                multipartFormData.append(upload.data, withName: upload.id, fileName: upload.name, mimeType: MimeType(path: upload.name).value)
             }
             
         }, to: clientReference.url,
            usingThreshold: MultipartFormData.encodingMemoryThreshold,
            method: .post,
            headers: httpHeaders,
-           interceptor: clientReference.configuration.interceptor,
-           fileManager: .default,
-           requestModifier: clientReference.configuration.requestModifier)*/
+           requestModifier: clientReference.configuration.requestModifier).validate()
         
     }
     
@@ -164,11 +160,19 @@ extension GraphusRequest {
                 var response = GraphusResponse<Any>(data: result)
                 response.errors = graqhQlErrors
                 
+                if self.clientReference.configuration.muteCanceledRequests, self.request.isCancelled { return }
                 queue.async {
                     completionHandler(.success(response))
                 }
                 
             } catch {
+                if self.clientReference.configuration.muteCanceledRequests {
+                    if let error = error as? AFError, error.isExplicitlyCancelledError {
+                        return
+                    } else if self.request.isCancelled {
+                        return
+                    }
+                }
                 queue.async {
                     completionHandler(.failure(error))
                 }

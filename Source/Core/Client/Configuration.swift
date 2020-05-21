@@ -19,6 +19,7 @@ public struct GraphusConfiguration {
     public var interceptor: RequestInterceptor?
     public var requestModifier: Session.RequestModifier?
     public var requestTimeout: TimeInterval = 60
+    public var muteCanceledRequests: Bool = false
     public var httpHeaders: HTTPHeaders?
     public var rootResponseKey: String = "data"
     public var rootErrorsKey: String? = "errors"

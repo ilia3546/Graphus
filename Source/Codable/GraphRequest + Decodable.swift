@@ -36,11 +36,13 @@ extension GraphusRequest {
                 var newResponse = GraphusResponse<T>(data: mappedData)
                 newResponse.errors = response.errors
                 
+                if self.clientReference.configuration.muteCanceledRequests, self.request.isCancelled { return }
                 queue.async {
                     completionHandler(.success(newResponse))
                 }
                 
             }catch{
+                if self.clientReference.configuration.muteCanceledRequests, self.request.isCancelled { return }
                 queue.async {
                     completionHandler(.failure(error))
                 }
