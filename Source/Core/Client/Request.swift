@@ -49,7 +49,7 @@ public class GraphusRequest {
                 multipartFormData.append(upload.data, withName: upload.id)
             }
             
-        }, to: clientReference.url, usingThreshold: MultipartFormData.encodingMemoryThreshold, method: .post, headers: httpHeaders, interceptor: nil, fileManager: .default, requestModifier: clientReference.configuration.requestModifier)
+        }, to: clientReference.url, usingThreshold: MultipartFormData.encodingMemoryThreshold, method: .post, headers: httpHeaders, interceptor: clientReference.configuration.interceptor, fileManager: .default, requestModifier: clientReference.configuration.requestModifier)
         
     }
     
