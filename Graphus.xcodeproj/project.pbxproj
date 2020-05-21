@@ -39,6 +39,7 @@
 		F3DA0DA1226E064A0018ED47 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D8E226E06490018ED47 /* Response.swift */; };
 		F3DA0DA2226E064A0018ED47 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D8F226E06490018ED47 /* Client.swift */; };
 		F3DA0DA3226E064A0018ED47 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D90226E06490018ED47 /* Request.swift */; };
+		F3DE4BDA24765E7F00B59279 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DE4BD924765E7F00B59279 /* Alamofire.framework */; };
 		F3EAEB4B2432173D0026CBFB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EAEB4A2432173D0026CBFB /* Logger.swift */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +92,7 @@
 		F3DA0DA4226E07530018ED47 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		F3DA0DA5226E07530018ED47 /* Graphus.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Graphus.podspec; sourceTree = SOURCE_ROOT; };
 		F3DA0DA6226E07530018ED47 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		F3DE4BD924765E7F00B59279 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		F3EAEB4A2432173D0026CBFB /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3DE4BDA24765E7F00B59279 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +156,7 @@
 				F3DA0D70226E05D30018ED47 /* Graphus */,
 				F3C6FC092281C65F007DE0F2 /* GraphusTests */,
 				F3DA0D6F226E05D30018ED47 /* Products */,
+				F3DE4BD824765E7E00B59279 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -238,6 +242,14 @@
 				F3DA0D90226E06490018ED47 /* Request.swift */,
 			);
 			path = Client;
+			sourceTree = "<group>";
+		};
+		F3DE4BD824765E7E00B59279 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F3DE4BD924765E7F00B59279 /* Alamofire.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -572,6 +584,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_TESTABILITY = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/Source/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -600,6 +616,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_TESTABILITY = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/Source/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;

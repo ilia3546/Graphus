@@ -1,0 +1,134 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Archive framework"
+  lane :archive do |options|
+    carthage(command: "build", no_skip_current: true, platform: "ios")
+    carthage(command: "archive", frameworks: ["Graphus"], output: "Graphus.framework.zip")
+    UI.success "Framework archived to ./Graphus.framework.zip"
+  end
+
+  desc "Bump new version"
+  lane :bump_version do |options|
+
+    ensure_git_status_clean(show_uncommitted_changes: true)
+
+    # Update currect version to last tag
+    increment_version_number(version_number: options[:current_version])
+
+    # Increment version
+    new_version_number = options[:current_version]
+    if options[:minor]
+      new_version_number = increment_version_number(bump_type: "minor")
+    elsif options[:major]
+      new_version_number = increment_version_number(bump_type: "major")
+    elsif options[:version]
+      new_version_number = increment_version_number(version_number: options[:version])
+    else
+      new_version_number = increment_version_number(bump_type: "patch")
+    end
+
+    # If tag already exists return error
+    if git_tag_exists(tag: new_version_number, remote: true)
+      UI.error "New version tag '#{new_version_number}' already exists. Remove tag or change bump type"
+      return
+    end
+    
+    # Commit if version changed
+    if options[:current_version] != new_version_number
+      commit_version_bump(xcodeproj: "./Graphus.xcodeproj", message: "Version bump to #{new_version_number}")
+    end
+
+    branch = git_branch()
+    add_git_tag(tag: new_version_number, message: "#{branch}/#{new_version_number} (fastlane)")
+
+    UI.success "New version bumped - #{new_version_number}"
+
+  end
+
+  desc "Deploy"
+  lane :deploy do |options|
+
+    ensure_git_status_clean(show_uncommitted_changes: true)
+
+    # Set current version equal to last tag
+    sh('git fetch --tags')
+    options[:current_version] = last_git_tag()
+
+    options[:changelog] = changelog_from_git_commits(
+      between: [options[:current_version], "HEAD"],
+      date_format: "short",
+      merge_commit_filtering: "include_merges"
+    )
+
+    bump_version(options)
+    archive()
+    push_to_git_remote(force: true)
+
+    new_version_number = lane_context[SharedValues::VERSION_NUMBER]
+    release(tag_name: new_version_number, changelog: options[:changelog])
+    new_version_url = lane_context[SharedValues::SET_GITHUB_RELEASE_HTML_LINK]
+
+    UI.message "Version #{new_version_number} released - #{new_version_url}"
+
+  end
+
+  lane :release do |options|
+    github_release = set_github_release(
+      repository_name: "ilia3546/Graphus",
+      api_token: ENV["GITHUB_TOKEN"],
+      name: "Version #{options[:tag_name]}",
+      tag_name: options[:tag_name],
+      description: options[:changelog],
+      commitish: git_branch(),
+      upload_assets: ["./Graphus.framework.zip"]
+    )
+  end
+
+  desc "Linting source code"
+  lane :lint do
+    swiftlint(strict: true)
+  end 
+
+  desc "Bootstrap carthage"
+  lane :bootstrap do
+    carthage(platform: "ios", cache_builds: true)
+  end
+
+  desc "Update dependencies"
+  lane :update do
+    carthage(command: "update", platform: "ios", cache_builds: true)
+  end
+
+  desc "Run unit testing"
+  lane :test do
+    scan(
+      scheme: "Graphus",
+      clean: true,
+      force_quit_simulator: true
+    )
+  end
+
+  desc "Clean project"
+  lane :clean do
+    clear_derived_data
+    xcclean
+  end
+
+end
