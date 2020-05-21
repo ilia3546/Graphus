@@ -44,7 +44,7 @@ extension GraphusRequest {
             }catch{
                 if self.clientReference.configuration.muteCanceledRequests, self.request.isCancelled { return }
                 queue.async {
-                    completionHandler(.failure(error))
+                    completionHandler(.failure(error.asAFError?.underlyingError ?? error))
                 }
             }
             

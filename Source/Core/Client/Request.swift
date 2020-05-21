@@ -28,7 +28,7 @@ public class GraphusRequest {
             httpHeaders.add(name: "User-Agent", value: "Graphus /\(version)")
         }
         
-        self.request = clientReference.session.upload(multipartFormData: { multipartFormData in
+        var request = clientReference.session.upload(multipartFormData: { multipartFormData in
             
             let queryStr = mode.rawValue + query.build().escaped
             let variablesStr = query.uploads.map({ "\"\($0.id)\":null" }).joined(separator: ",")
@@ -53,36 +53,45 @@ public class GraphusRequest {
            usingThreshold: MultipartFormData.encodingMemoryThreshold,
            method: .post,
            headers: httpHeaders,
-           requestModifier: clientReference.configuration.requestModifier).validate()
-        
+           requestModifier: clientReference.configuration.requestModifier)
+                
+        if let customValidation = clientReference.configuration.validation {
+            request = request.validate(customValidation)
+        }
+        self.request = request.validate(GraphusRequest.validateStatus).validate()
     }
     
-    private func validateGraphErrors(_ value: Any) throws -> [GraphQLError] {
+    private static func validateStatus(request: URLRequest?, response: HTTPURLResponse, data: Data?) -> DataRequest.ValidationResult {
         
-        if let response = value as? [String: Any] {
-            if let errorType = response["error"] as? String,
-                errorType == "invalid_grant" || errorType == "access_denied",
-                let errorDescription = response["error_description"] as? String {
-                throw GraphusError.authentication(errorDescription)
-                
-            }else if let errorDescription = response["error_description"] as? String {
-                // Test oAuth error
-                throw GraphusError.serverError(errorDescription)
-                
-            }else if let errorMsg = response["errorMsg"] as? String {
-                // Test server errors
-                throw GraphusError.serverError(errorMsg)
-                
-            }else if let errorsKey = self.clientReference.configuration.rootErrorsKey,
-                let errors = response[errorsKey] as? [Any] {
-                return errors.compactMap({ GraphQLError($0) })
-                
-            }
-            
+        switch response.statusCode {
+        case 400: return .failure(GraphusError.client("Bad Request"))
+        case 401: return .failure(GraphusError.authentication("Unauthorized"))
+        case 402: return .failure(GraphusError.client("Payment Required"))
+        case 403: return .failure(GraphusError.authentication("Forbidden"))
+        case 404: return .failure(GraphusError.client("Not Found"))
+        case 405: return .failure(GraphusError.client("Method Not Allowed"))
+        case 406: return .failure(GraphusError.client("Not Acceptable"))
+        case 407: return .failure(GraphusError.authentication("Proxy Authentication Required"))
+        case 408: return .failure(GraphusError.client("Request Timeout"))
+        case 409: return .failure(GraphusError.client("Conflict"))
+        case 410: return .failure(GraphusError.client("Gone"))
+        case 411: return .failure(GraphusError.client("Length Required"))
+        case 412: return .failure(GraphusError.client("Precondition Failed"))
+        case 413: return .failure(GraphusError.client("Request Entity Too Large"))
+        case 414: return .failure(GraphusError.client("Request-URI Too Long"))
+        case 415: return .failure(GraphusError.client("Unsupported Media Type"))
+        case 416: return .failure(GraphusError.client("Requested Range Not Satisfiable"))
+        case 417: return .failure(GraphusError.client("Expectation Failed"))
+        case 500: return .failure(GraphusError.serverError("Internal Server Error"))
+        case 501: return .failure(GraphusError.serverError("Not Implemented"))
+        case 502: return .failure(GraphusError.serverError("Bad Gateway"))
+        case 503: return .failure(GraphusError.serverError("Service Unavailable"))
+        case 504: return .failure(GraphusError.serverError("Gateway Timeout"))
+        case 505: return .failure(GraphusError.serverError("HTTP Version Not Supported"))
+        default: break
         }
         
-        return []
-        
+        return .success(())
     }
     
     private func extractObject(for key: String, from data: Any) throws -> Any {
@@ -140,7 +149,7 @@ extension GraphusRequest {
     public func send(queue: DispatchQueue = .main,
                      customRootKey: String? = nil,
                      completionHandler: @escaping (Result<GraphusResponse<Any>, Error>) -> Void) -> GraphusRequest.Cancelable {
-
+        
         self.request.responseJSON(queue: .global(qos: .utility)) { response in
             do {
                 
@@ -151,14 +160,18 @@ extension GraphusRequest {
                                                             duration: duration)
                 let value = try response.result.get()
                 
-                let graqhQlErrors = try self.validateGraphErrors(value)
                 var key = customRootKey ?? self.clientReference.configuration.rootResponseKey
                 if customRootKey == nil, let queryName = self.query.alias ?? self.query.name {
                     key += ".\(queryName)"
                 }
                 let result = try? self.extractObject(for: key, from: value)
                 var response = GraphusResponse<Any>(data: result)
-                response.errors = graqhQlErrors
+                
+                if let errorsKey = self.clientReference.configuration.rootErrorsKey,
+                    let dict = value as? [AnyHashable: Any],
+                    let errors = dict[errorsKey] as? [Any] {
+                    response.errors = errors.compactMap({ GraphQLError($0) })
+                }
                 
                 if self.clientReference.configuration.muteCanceledRequests, self.request.isCancelled { return }
                 queue.async {
@@ -166,15 +179,12 @@ extension GraphusRequest {
                 }
                 
             } catch {
-                if self.clientReference.configuration.muteCanceledRequests {
-                    if let error = error as? AFError, error.isExplicitlyCancelledError {
-                        return
-                    } else if self.request.isCancelled {
-                        return
-                    }
+                if self.clientReference.configuration.muteCanceledRequests,
+                    ((error.asAFError?.isExplicitlyCancelledError ?? false) || self.request.isCancelled) {
+                    return
                 }
                 queue.async {
-                    completionHandler(.failure(error))
+                    completionHandler(.failure(error.asAFError?.underlyingError ?? error))
                 }
             }
         }

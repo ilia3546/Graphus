@@ -21,6 +21,7 @@ public struct GraphusConfiguration {
     public var requestTimeout: TimeInterval = 60
     public var muteCanceledRequests: Bool = false
     public var httpHeaders: HTTPHeaders?
+    public var validation: DataRequest.Validation?
     public var rootResponseKey: String = "data"
     public var rootErrorsKey: String? = "errors"
     
