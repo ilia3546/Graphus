@@ -71,18 +71,12 @@ platform :ios do
     sh('git fetch --tags')
     options[:current_version] = last_git_tag()
 
-    options[:changelog] = changelog_from_git_commits(
-      between: [options[:current_version], "HEAD"],
-      date_format: "short",
-      merge_commit_filtering: "include_merges"
-    )
-
     bump_version(options)
     archive()
     push_to_git_remote(force: true)
 
     new_version_number = lane_context[SharedValues::VERSION_NUMBER]
-    release(tag_name: new_version_number, changelog: options[:changelog])
+    release(tag_name: new_version_number)
     new_version_url = lane_context[SharedValues::SET_GITHUB_RELEASE_HTML_LINK]
 
     UI.message "Version #{new_version_number} released - #{new_version_url}"
@@ -95,7 +89,6 @@ platform :ios do
       api_token: ENV["GITHUB_TOKEN"],
       name: "Version #{options[:tag_name]}",
       tag_name: options[:tag_name],
-      description: options[:changelog],
       commitish: git_branch(),
       upload_assets: ["./Graphus.framework.zip"]
     )
