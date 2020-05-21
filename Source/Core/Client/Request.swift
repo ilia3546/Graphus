@@ -127,8 +127,8 @@ public class GraphusRequest {
 
 extension GraphusRequest {
     public class Cancelable {
-        private let requst: UploadRequest
-        internal init(_ requst: UploadRequest) {
+        private let requst: Alamofire.DataRequest
+        internal init(_ requst: Alamofire.DataRequest) {
             self.requst = requst
         }
         public func cancel(){
