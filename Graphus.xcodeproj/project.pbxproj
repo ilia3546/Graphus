@@ -21,6 +21,8 @@
 		F3C6D3D5243F731C004316A6 /* OnQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C6D3D4243F731C004316A6 /* OnQuery.swift */; };
 		F3C6FC0B2281C65F007DE0F2 /* GraphusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C6FC0A2281C65F007DE0F2 /* GraphusTests.swift */; };
 		F3C6FC0D2281C65F007DE0F2 /* Graphus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DA0D6E226E05D30018ED47 /* Graphus.framework */; };
+		F3D6E4CF2476DA5900238FF7 /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F3DE4BD924765E7F00B59279 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F3D6E4D02476DB3400238FF7 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DE4BD924765E7F00B59279 /* Alamofire.framework */; };
 		F3DA0D91226E064A0018ED47 /* Graphus.h in Headers */ = {isa = PBXBuildFile; fileRef = F3DA0D79226E06490018ED47 /* Graphus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F3DA0D93226E064A0018ED47 /* QueryBuilder + Coding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D7C226E06490018ED47 /* QueryBuilder + Coding.swift */; };
 		F3DA0D94226E064A0018ED47 /* GraphQueryKeyedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D7D226E06490018ED47 /* GraphQueryKeyedContainer.swift */; };
@@ -53,6 +55,19 @@
 			remoteInfo = Graphus;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F3D6E4CE2476DA4F00238FF7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F3D6E4CF2476DA5900238FF7 /* Alamofire.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		F32BB32E23911CD7005C01D6 /* KeyedQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedQuery.swift; sourceTree = "<group>"; };
@@ -103,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3D6E4D02476DB3400238FF7 /* Alamofire.framework in Frameworks */,
 				F3C6FC0D2281C65F007DE0F2 /* Graphus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +292,7 @@
 				F3C6FC042281C65F007DE0F2 /* Sources */,
 				F3C6FC052281C65F007DE0F2 /* Frameworks */,
 				F3C6FC062281C65F007DE0F2 /* Resources */,
+				F3D6E4CE2476DA4F00238FF7 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -422,6 +439,10 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = H93M692V93;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = GraphusTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -441,6 +462,10 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = H93M692V93;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = GraphusTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
