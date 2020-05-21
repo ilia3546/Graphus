@@ -11,95 +11,55 @@ import Alamofire
 
 public class GraphusRequest {
 
-    public enum Mode: String {
-        case query, mutation
-    }
-    
     public var mode: Mode
     public var query: Query
-    public var client: GraphusClient
-    var sessionDataTask: URLSessionDataTask!
+    private var clientReference: GraphusClient
     
-    private var complectionBlock: ((Int?, Any?, Error?, [GraphQLError]) -> Void)?
+    internal let request: UploadRequest
     
-    init(_ mode: Mode = .query, query: Query, client: GraphusClient) {
-        self.client = client
+    init(_ mode: Mode = .query, query: Query, clientReference: GraphusClient) {
+        self.clientReference = clientReference
         self.query = query
         self.mode = mode
-        
-        let urlRequest = GraphusRequest.createRequest(mode, query: query, client: client)
-        self.sessionDataTask = client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
-    }
-    
-    private static func createRequest(_ mode: Mode, query: Query, client: GraphusClient) -> URLRequest {
-        var request = URLRequest(url: client.url)
-        
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+                
+        var httpHeaders = clientReference.configuration.httpHeaders ?? []
+        if !httpHeaders.contains(where: { $0.name.lowercased() == "user-agent" }),
+            let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            httpHeaders.add(name: "User-Agent", value: "Graphus /\(version)")
+        }
 
-        var isUserAgentExists = false
-        
-        if let headers = client.session.configuration.httpAdditionalHeaders,
-            let _ = headers["User-Agent"] ?? headers["User-agent"] ?? headers["user-agent"] ?? headers["user-Agent"] {
-            isUserAgentExists = true
-        }
-        
-        if !isUserAgentExists, let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            request.addValue("Graphus /\(version)", forHTTPHeaderField: "User-Agent")
-        }
-        
-        let makeRandom = { UInt32.random(in: (.min)...(.max)) }
-        let boundary = String(format: "------------------------%08X%08X", makeRandom(), makeRandom())
-        request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-      
-        var body = Data()
-        let queryStr = mode.rawValue + query.build().escaped
-        let variablesStr = query.uploads.map({ "\"\($0.id)\":null" }).joined(separator: ",")
-        let operations = String(format: "{\"query\": \"%@\",\"variables\": {%@}, \"operationName\": null}", queryStr, variablesStr)
-        self.append(operations, to: &body, for: "operations", boundary: boundary)
-        
-        let mapStr = query.uploads.map({
-            String(format: "\"%@\": [\"variables.%@\"]", $0.id, $0.id)
-        }).joined(separator: ",")
-        self.append("{\(mapStr)}", to: &body, for: "map", boundary: boundary)
-        for upload in query.uploads {
-            self.append(upload, to: &body, for: upload.id, boundary: boundary)
-        }
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-
-        request.addValue(String(body.count), forHTTPHeaderField: "Content-Length")
-        request.httpBody = body
-        
-        return request
-    }
-    
-    private static func append(_ object: Any, to body: inout Data, for key: String, boundary: String) {
-        
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        
-        if let value = object as? String {
-            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
-            body.append("\(value)\r\n".data(using: .utf8)!)
-        }else if let value = object as? Upload {
-            body.append("Content-Disposition: form-data; name=\"\(key)\"; filename=\"\(value.name)\"\r\n".data(using: .utf8)!)
-            body.append("Content-Type: \(MimeType(path: value.name).value)\r\n\r\n".data(using: .utf8)!)
-            body.append(value.data)
-            body.append("\r\n".data(using: .utf8)!)
-        }
+        self.request = clientReference.session.upload(multipartFormData: { multipartFormData in
+            
+            let queryStr = mode.rawValue + query.build().escaped
+            let variablesStr = query.uploads.map({ "\"\($0.id)\":null" }).joined(separator: ",")
+            let operations = String(format: "{\"query\": \"%@\",\"variables\": {%@}, \"operationName\": null}", queryStr, variablesStr)
+            if let data = operations.data(using: .utf8) {
+                multipartFormData.append(data, withName: "operations")
+            }
+            
+            let mapStr = query.uploads
+                .map({ String(format: "\"%@\": [\"variables.%@\"]", $0.id, $0.id) })
+                .joined(separator: ",")
+            
+            if let data = "{\(mapStr)}".data(using: .utf8) {
+                multipartFormData.append(data, withName: "map")
+            }
+            
+            for upload in query.uploads {
+                multipartFormData.append(upload.data, withName: upload.id)
+            }
+            
+        }, to: clientReference.url, usingThreshold: MultipartFormData.encodingMemoryThreshold, method: .post, headers: httpHeaders, interceptor: nil, fileManager: .default, requestModifier: clientReference.configuration.requestModifier)
         
     }
     
-
-    
-    private func validateGraphErrors(_ data: Data, response: URLResponse?) throws -> [GraphQLError] {
-        let currentObj = try JSONSerialization.jsonObject(with: data, options: [])
+    private func validateGraphErrors(_ value: Any) throws -> [GraphQLError] {
         
-        if let response = currentObj as? [String: Any]{
+        if let response = value as? [String: Any] {
             if let errorType = response["error"] as? String,
                 errorType == "invalid_grant" || errorType == "access_denied",
                 let errorDescription = response["error_description"] as? String {
                 throw GraphusError.authentication(errorDescription)
- 
                 
             }else if let errorDescription = response["error_description"] as? String {
                 // Test oAuth error
@@ -109,7 +69,7 @@ public class GraphusRequest {
                 // Test server errors
                 throw GraphusError.serverError(errorMsg)
                 
-            }else if let errorsKey = self.client.rootErrorsKey,
+            }else if let errorsKey = self.clientReference.configuration.rootErrorsKey,
                 let errors = response[errorsKey] as? [Any] {
                 return errors.compactMap({ GraphQLError($0) })
                 
@@ -151,39 +111,6 @@ public class GraphusRequest {
         }
     }
     
-    private func responseHandler(data: Data?, response: URLResponse?, error: Error?){
-        
-        let statusCode = (response as? HTTPURLResponse)?.statusCode
-       
-        if let error = error {
-            self.complectionBlock?(statusCode, nil, error, [])
-            return
-        }
-        
-        do{
-            
-            guard let data = data else {
-                if let statusCode = statusCode {
-                    try self.checkStatusCode(statusCode)
-                }
-                throw GraphusError.responseDataIsNull
-            }
-            
-            let graphErrors = try validateGraphErrors(data, response: response)
-            
-            if let statusCode = statusCode {
-                try self.checkStatusCode(statusCode)
-            }
-            
-            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-            self.complectionBlock?(statusCode, jsonObject, nil, graphErrors)
-            
-        }catch{
-            self.complectionBlock?(statusCode, nil, error, [])
-        }
-        
-    }
-    
     private func extractObject(for key: String, from data: Any) throws -> Any {
         
         var currentObj = data
@@ -222,16 +149,13 @@ public class GraphusRequest {
 
 extension GraphusRequest {
     public class Cancelable {
-        
-        private var sessionDataTask: URLSessionDataTask
-        internal init(_ sessionDataTask: URLSessionDataTask) {
-            self.sessionDataTask = sessionDataTask
+        private let requst: UploadRequest
+        internal init(_ requst: UploadRequest) {
+            self.requst = requst
         }
-        
         public func cancel(){
-            self.sessionDataTask.cancel()
+            self.requst.cancel()
         }
-        
     }
 }
 
@@ -239,13 +163,45 @@ extension GraphusRequest {
 extension GraphusRequest {
     
     @discardableResult
-    public func send(queue: DispatchQueue? = nil,
+    public func send(queue: DispatchQueue = .main,
                      customRootKey: String? = nil,
                      completionHandler: @escaping (Result<GraphusResponse<Any>, Error>) -> Void) -> GraphusRequest.Cancelable {
         
-        self.client.logger.querySended(mode: self.mode, name: self.query.name ?? "?", queryString: self.query.build())
+        self.request.responseJSON(queue: .global(qos: .utility)) { response in
+            do {
+                
+                let statusCode = response.response?.statusCode ?? -999
+                let duration = response.metrics?.taskInterval.duration ?? 0
+                self.clientReference.logger.responseRecived(name: self.query.name ?? "Unknown",
+                                                            statusCode: statusCode,
+                                                            duration: duration)
+                let value = try response.result.get()
+                
+                let graqhQlErrors = try self.validateGraphErrors(value)
+                var key = customRootKey ?? self.clientReference.configuration.rootResponseKey
+                if customRootKey == nil, let queryName = self.query.alias ?? self.query.name {
+                    key += ".\(queryName)"
+                }
+                let result = try? self.extractObject(for: key, from: value)
+                var response = GraphusResponse<Any>(data: result)
+                response.errors = graqhQlErrors
+                
+                queue.async {
+                    completionHandler(.success(response))
+                }
+                
+            } catch {
+                queue.async {
+                    completionHandler(.failure(error))
+                }
+            }
+        }
 
-        let startDate = Date()
+        self.clientReference.logger.querySended(mode: self.mode,
+                                                name: self.query.name ?? "Unknown",
+                                                queryString: self.query.build())
+
+        /*
         
         self.complectionBlock = { statusCode, res, internalError, graphsErrors in
             
@@ -289,8 +245,24 @@ extension GraphusRequest {
         }
         
         self.sessionDataTask.resume()
-
-        return .init(self.sessionDataTask)
+*/
+        
+        return .init(self.request)
         
     }
+}
+
+extension GraphusRequest {
+    
+    /// The request mode
+    public enum Mode: String {
+        
+        /// Queries are used to request the data it needs from the server
+        case query
+        
+        /// Mutations are used to CUD: Create new data, Update existing data, Delete existing data
+        case mutation
+        
+    }
+    
 }

@@ -7,18 +7,19 @@
 //
 
 import Foundation
+import Alamofire
 
 extension GraphusRequest {
     
     @discardableResult
     public func send<T: Decodable>(mapToDecodable object: T.Type,
-                                        customRootKey: String? = nil,
-                                         queue: DispatchQueue? = nil,
-                                         customDecoder: JSONDecoder? = nil,
-                                         completionHandler: @escaping (Result<GraphusResponse<T>, Error>) -> Void) -> GraphusRequest.Cancelable {
+                                   customRootKey: String? = nil,
+                                   queue: DispatchQueue = .main,
+                                   customDecoder: JSONDecoder? = nil,
+                                   completionHandler: @escaping (Result<GraphusResponse<T>, Error>) -> Void) -> GraphusRequest.Cancelable {
         
-        return send(queue: .global(qos: .background), customRootKey: customRootKey) { result in
-
+        return self.send(queue: .global(qos: .utility), customRootKey: customRootKey) { result in
+            
             do{
                 
                 let response = try result.get()
@@ -35,19 +36,18 @@ extension GraphusRequest {
                 var newResponse = GraphusResponse<T>(data: mappedData)
                 newResponse.errors = response.errors
                 
-                guard self.sessionDataTask.state != .canceling else { return }
-                (queue ?? .main).async {
+                queue.async {
                     completionHandler(.success(newResponse))
                 }
                 
             }catch{
-                guard self.sessionDataTask.state != .canceling else { return }
-                (queue ?? .main).async {
+                queue.async {
                     completionHandler(.failure(error))
                 }
             }
-           
+            
         }
+   
     }
 }
 

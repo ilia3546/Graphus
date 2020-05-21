@@ -7,41 +7,41 @@
 //
 
 import Foundation
+import Alamofire
 
-public class GraphusClient {
+public class GraphusClient: SessionDelegate {
     
-    public let configuration: URLSessionConfiguration
-    public let url: URL
-    internal lazy var session: URLSession = {
-        return URLSession(configuration: self.configuration)
-    }()
-    
-    /// Root response key
-    ///
-    /// It is used for response mapping
-    public var rootResponseKey = "data"
-    
-    /// Root key for mapping errors
-    ///
-    /// The default value is "errors"
-    public var rootErrorsKey: String? = "errors"
-    
-    /// Logger
-    ///
-    /// You can set up debugging params
-    public var logger: GraphusLoggerProtocol
+    internal let session: Session
+
+    public let configuration: GraphusConfiguration
+    public let url: URLConvertible
+    public var logger: GraphusLoggerProtocol = GraphusLogger()
     
     /// Create graphus client
-    public init(url: URL, configuration: URLSessionConfiguration){
-        self.configuration = configuration
+    public init(url: URLConvertible, configuration: GraphusConfiguration = .default){
         self.url = url
-        self.logger = GraphusLogger()
+        self.configuration = configuration
+        
+        self.session = Session(configuration: URLSessionConfiguration.af.default,
+                               delegate: GraphusSessionDelegate(),
+                               rootQueue: DispatchQueue(label: "com.graphus.session.rootQueue"),
+                               startRequestsImmediately: true,
+                               requestQueue: DispatchQueue(label: "com.graphus.session.requestQueue"),
+                               serializationQueue: DispatchQueue(label: "com.graphus.session.serializationQueue"),
+                               interceptor: configuration.interceptor,
+                               serverTrustManager: configuration.serverTrustManager,
+                               redirectHandler: configuration.redirectHandler,
+                               cachedResponseHandler: configuration.cachedResponseHandler,
+                               eventMonitors: configuration.eventMonitors)
     }
     
     /// Crate query request
     public func request(_ mode: GraphusRequest.Mode = .query, query: Query) -> GraphusRequest {
-        return .init(mode, query: query, client: self)
+        return .init(mode, query: query, clientReference: self)
     }
+    
+}
 
+internal class GraphusSessionDelegate: SessionDelegate {
     
 }

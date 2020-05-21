@@ -40,6 +40,7 @@
 		F3DA0DA2226E064A0018ED47 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D8F226E06490018ED47 /* Client.swift */; };
 		F3DA0DA3226E064A0018ED47 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DA0D90226E06490018ED47 /* Request.swift */; };
 		F3DE4BDA24765E7F00B59279 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DE4BD924765E7F00B59279 /* Alamofire.framework */; };
+		F3DE4BDE2476655000B59279 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DE4BDD2476655000B59279 /* Configuration.swift */; };
 		F3EAEB4B2432173D0026CBFB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EAEB4A2432173D0026CBFB /* Logger.swift */; };
 /* End PBXBuildFile section */
 
@@ -93,6 +94,7 @@
 		F3DA0DA5226E07530018ED47 /* Graphus.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Graphus.podspec; sourceTree = SOURCE_ROOT; };
 		F3DA0DA6226E07530018ED47 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		F3DE4BD924765E7F00B59279 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		F3DE4BDD2476655000B59279 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		F3EAEB4A2432173D0026CBFB /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -240,6 +242,7 @@
 				F3DA0D8E226E06490018ED47 /* Response.swift */,
 				F3DA0D8F226E06490018ED47 /* Client.swift */,
 				F3DA0D90226E06490018ED47 /* Request.swift */,
+				F3DE4BDD2476655000B59279 /* Configuration.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -375,6 +378,7 @@
 				F3DA0D9C226E064A0018ED47 /* GraphusError.swift in Sources */,
 				F3DA0D97226E064A0018ED47 /* MutationEncoder + Coding.swift in Sources */,
 				F3A1431F230182AC00AF6F99 /* GraphQLError.swift in Sources */,
+				F3DE4BDE2476655000B59279 /* Configuration.swift in Sources */,
 				F3DA0DA1226E064A0018ED47 /* Response.swift in Sources */,
 				F3DA0D9F226E064A0018ED47 /* QueryableProtocol.swift in Sources */,
 				F34B329F2437686100A68DA6 /* FieldsBuilder + Coding.swift in Sources */,
