@@ -17,7 +17,8 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '10.0'
   s.swift_version = ['4.2', '5.0']
   s.default_subspec = 'Core'
-  
+  s.dependency 'Alamofire', '~> 5.3'
+ 
   s.subspec 'Core' do |cs|
       cs.source_files  = 'Source/Core/**/*.{swift,h,m}'
   end

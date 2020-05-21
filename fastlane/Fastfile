@@ -89,6 +89,7 @@ platform :ios do
       api_token: ENV["GITHUB_TOKEN"],
       name: "Version #{options[:tag_name]}",
       tag_name: options[:tag_name],
+      description: "No changelog provided",
       commitish: git_branch(),
       upload_assets: ["./Graphus.framework.zip"]
     )
