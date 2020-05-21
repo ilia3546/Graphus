@@ -28,7 +28,7 @@ public class GraphusClient: SessionDelegate {
                                startRequestsImmediately: true,
                                requestQueue: DispatchQueue(label: "com.graphus.session.requestQueue"),
                                serializationQueue: DispatchQueue(label: "com.graphus.session.serializationQueue"),
-                               interceptor: nil,//configuration.interceptor,
+                               interceptor:configuration.interceptor,
                                serverTrustManager: configuration.serverTrustManager,
                                redirectHandler: configuration.redirectHandler,
                                cachedResponseHandler: configuration.cachedResponseHandler,

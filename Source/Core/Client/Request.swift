@@ -15,7 +15,7 @@ public class GraphusRequest {
     public var query: Query
     private var clientReference: GraphusClient
     
-    internal let request: UploadRequest
+    internal let request: Alamofire.DataRequest
     
     init(_ mode: Mode = .query, query: Query, clientReference: GraphusClient) {
         self.clientReference = clientReference
@@ -28,7 +28,9 @@ public class GraphusRequest {
             httpHeaders.add(name: "User-Agent", value: "Graphus /\(version)")
         }
 
-        self.request = clientReference.session.upload(multipartFormData: { multipartFormData in
+        self.request = clientReference.session.request(clientReference.url, interceptor: clientReference.configuration.interceptor)
+        
+        /*self.request = clientReference.session.upload(multipartFormData: { multipartFormData in
             
             let queryStr = mode.rawValue + query.build().escaped
             let variablesStr = query.uploads.map({ "\"\($0.id)\":null" }).joined(separator: ",")
@@ -49,7 +51,13 @@ public class GraphusRequest {
                 multipartFormData.append(upload.data, withName: upload.id)
             }
             
-        }, to: clientReference.url, usingThreshold: MultipartFormData.encodingMemoryThreshold, method: .post, headers: httpHeaders, interceptor: clientReference.configuration.interceptor, fileManager: .default, requestModifier: clientReference.configuration.requestModifier)
+        }, to: clientReference.url,
+           usingThreshold: MultipartFormData.encodingMemoryThreshold,
+           method: .post,
+           headers: httpHeaders,
+           interceptor: clientReference.configuration.interceptor,
+           fileManager: .default,
+           requestModifier: clientReference.configuration.requestModifier)*/
         
     }
     
@@ -79,36 +87,6 @@ public class GraphusRequest {
         
         return []
         
-    }
-    
-    private func checkStatusCode(_ statusCode: Int) throws {
-        switch statusCode {
-        case 400: throw GraphusError.client("Bad Request")
-        case 401: throw GraphusError.authentication("Unauthorized")
-        case 402: throw GraphusError.client("Payment Required")
-        case 403: throw GraphusError.authentication("Forbidden")
-        case 404: throw GraphusError.client("Not Found")
-        case 405: throw GraphusError.client("Method Not Allowed")
-        case 406: throw GraphusError.client("Not Acceptable")
-        case 407: throw GraphusError.authentication("Proxy Authentication Required")
-        case 408: throw GraphusError.client("Request Timeout")
-        case 409: throw GraphusError.client("Conflict")
-        case 410: throw GraphusError.client("Gone")
-        case 411: throw GraphusError.client("Length Required")
-        case 412: throw GraphusError.client("Precondition Failed")
-        case 413: throw GraphusError.client("Request Entity Too Large")
-        case 414: throw GraphusError.client("Request-URI Too Long")
-        case 415: throw GraphusError.client("Unsupported Media Type")
-        case 416: throw GraphusError.client("Requested Range Not Satisfiable")
-        case 417: throw GraphusError.client("Expectation Failed")
-        case 500: throw GraphusError.serverError("Internal Server Error")
-        case 501: throw GraphusError.serverError("Not Implemented")
-        case 502: throw GraphusError.serverError("Bad Gateway")
-        case 503: throw GraphusError.serverError("Service Unavailable")
-        case 504: throw GraphusError.serverError("Gateway Timeout")
-        case 505: throw GraphusError.serverError("HTTP Version Not Supported")
-        default: break
-        }
     }
     
     private func extractObject(for key: String, from data: Any) throws -> Any {
@@ -166,7 +144,7 @@ extension GraphusRequest {
     public func send(queue: DispatchQueue = .main,
                      customRootKey: String? = nil,
                      completionHandler: @escaping (Result<GraphusResponse<Any>, Error>) -> Void) -> GraphusRequest.Cancelable {
-        
+
         self.request.responseJSON(queue: .global(qos: .utility)) { response in
             do {
                 
@@ -200,52 +178,6 @@ extension GraphusRequest {
         self.clientReference.logger.querySended(mode: self.mode,
                                                 name: self.query.name ?? "Unknown",
                                                 queryString: self.query.build())
-
-        /*
-        
-        self.complectionBlock = { statusCode, res, internalError, graphsErrors in
-            
-            self.client.logger.responseRecived(name: self.query.name ?? "?", statusCode: statusCode ?? -999, duration: Date().timeIntervalSince(startDate))
-            
-            if let error = internalError {
-                guard self.sessionDataTask.state != .canceling else { return }
-                (queue ?? .main).async {
-                    completionHandler(.failure(error))
-                }
-                return
-            }
-            
-            (queue ?? .main).async {
-                
-                var key = customRootKey ?? "\(self.client.rootResponseKey)"
-                
-                if customRootKey == nil, let queryName = self.query.alias ?? self.query.name {
-                    key += ".\(queryName)"
-                }
-                
-                var data: Any?
-                if let res = res {
-                    data = try? self.extractObject(for: key, from: res)
-                }
-                
-                var response = GraphusResponse<Any>(data: data)
-                response.errors = graphsErrors
-                
-                guard self.sessionDataTask.state != .canceling else { return }
-                completionHandler(.success(response))
-                
-            }
-            
-        }
-
-
-        if self.sessionDataTask.state == .completed {
-            let urlRequest = GraphusRequest.createRequest(self.mode, query: self.query, client: self.client)
-            self.sessionDataTask = self.client.session.dataTask(with: urlRequest, completionHandler: responseHandler)
-        }
-        
-        self.sessionDataTask.resume()
-*/
         
         return .init(self.request)
         
