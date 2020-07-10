@@ -30,6 +30,12 @@ public class GraphQueryContainer {
         closure(builder.query())
         self.builder.fields.append(OnQuery(typeName: typeName, fields: builder.fields))
     }
+    
+    public func on(_ typeName: String, model: Queryable.Type, context: QueryBuilderContext? = nil) {
+        let builder = QueryBuilder()
+        model.buildQuery(with: builder, context: context)
+        self.builder.fields.append(OnQuery(typeName: typeName, fields: builder.fields))
+    }
 
 }
 

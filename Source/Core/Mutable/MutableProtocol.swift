@@ -20,7 +20,7 @@ extension Mutable {
     
     public var arguments: Arguments {
         let objectEncoder = MutationEncoder()
-        if let differetable = self as? Differentable {
+        if let differetable = self as? Differentiable {
             objectEncoder.changeSet = differetable.changeSet
         }
         mutationEncode(to: objectEncoder)

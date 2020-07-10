@@ -25,7 +25,7 @@ public class MutationContainer {
         
         if let change = changeSet.first(where: key) {
             if let rootChange = change as? RootChange {
-                if var value = value as? Differentable {
+                if var value = value as? Differentiable {
                     value.changeSet = ChangeSet(changes: rootChange.childChanges)
                     complection(value as? T)
                 } else {

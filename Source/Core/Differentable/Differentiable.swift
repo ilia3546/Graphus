@@ -1,5 +1,5 @@
 //
-//  Differentable.swift
+//  Differentiable.swift
 //  Graphus
 //
 //  Created by Ilya Kharlamov on 03.04.2020.
@@ -8,12 +8,12 @@
 
 import Foundation
 
-public protocol Differentable: Mutable {
+public protocol Differentiable: Mutable {
     var changeSet: ChangeSet? { get set }
     func alwaysSendUnchangedFields(with builder: FieldsBuilder)
 }
 
-extension Differentable {
+extension Differentiable {
     public func alwaysSendUnchangedFields(with builder: FieldsBuilder) {}
     internal var alwaysSendableUnchangedFields: [String] {
         let fieldsBuilder = FieldsBuilder()

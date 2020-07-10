@@ -22,12 +22,12 @@ public struct ChangeSet: Codable {
         self.changes = changes
     }
     
-    public init(from oldObject: Differentable, to newObject: Differentable) {
+    public init(source: Differentiable, target: Differentiable) {
         
         // Get new fields
         let newEncoder = MutationEncoder()
         newEncoder.isChangesetReloading = true
-        var newMutableInstance = newObject
+        var newMutableInstance = target
         newMutableInstance.changeSet = nil
         newMutableInstance.mutationEncode(to: newEncoder)
         let newFields = newEncoder.fields
@@ -35,7 +35,7 @@ public struct ChangeSet: Codable {
         // Get old fields
         let oldEncoder = MutationEncoder()
         oldEncoder.isChangesetReloading = true
-        var oldMutableInstance = oldObject
+        var oldMutableInstance = source
         oldMutableInstance.changeSet = nil
         oldMutableInstance.mutationEncode(to: oldEncoder)
         let oldFields = oldEncoder.fields
@@ -52,12 +52,12 @@ public struct ChangeSet: Codable {
             }
                         
             // Compare mutable object
-            if let oldValue = oldField.value as? Differentable, let newValue = newField.value as? Differentable {
-                let childChangeSet = ChangeSet(from: oldValue, to: newValue)
+            if let oldValue = oldField.value as? Differentiable, let newValue = newField.value as? Differentiable {
+                let childChangeSet = ChangeSet(source: oldValue, target: newValue)
                 var rootChange = RootChange(key: newField.key, childChanges: childChangeSet.changes)
                 if childChangeSet.hasChangedFields {
                     changes.append(rootChange)
-                } else if newObject.alwaysSendableUnchangedFields.contains(newField.key) {
+                } else if target.alwaysSendableUnchangedFields.contains(newField.key) {
                     rootChange.isForcedToSend = true
                     changes.append(rootChange)
                 }
@@ -69,7 +69,7 @@ public struct ChangeSet: Codable {
                 var fieldChange = FieldChange(key: newField.key, oldValue: oldField.value, newValue: newField.value)
                 if oldValue != newValue {
                     changes.append(fieldChange)
-                } else if newObject.alwaysSendableUnchangedFields.contains(newField.key) {
+                } else if target.alwaysSendableUnchangedFields.contains(newField.key) {
                     fieldChange.isForcedToSend = true
                     changes.append(fieldChange)
                 }
@@ -80,7 +80,7 @@ public struct ChangeSet: Codable {
             var fieldChange = FieldChange(key: newField.key, oldValue: oldField.value, newValue: newField.value)
             if oldField.value.argumentValue != newField.value.argumentValue {
                 changes.append(fieldChange)
-            } else if newObject.alwaysSendableUnchangedFields.contains(newField.key) {
+            } else if target.alwaysSendableUnchangedFields.contains(newField.key) {
                 fieldChange.isForcedToSend = true
                 changes.append(fieldChange)
             }
