@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Graphus'
-  s.version          = '2.0.4'
+  s.version          = '2.0.5'
   s.summary          = 'Powerful and strongly-typed, pure-Swift GraphQL client for iOS'
   s.homepage         = 'https://github.com/ilia3546/Graphus'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '10.0'
   s.swift_version = ['4.2', '5.0']
   s.default_subspec = 'Core'
-  s.dependency 'Alamofire', '~> 5.2'
+  s.dependency 'Alamofire', '~> 5.3'
  
   s.subspec 'Core' do |cs|
       cs.source_files  = 'Source/Core/**/*.{swift,h,m}'
