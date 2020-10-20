@@ -61,6 +61,11 @@ Run unit testing
 fastlane ios clean
 ```
 Clean project
+### ios carthage_wrapper
+```
+fastlane ios carthage_wrapper
+```
+Run carthage in a wrapper that works with Xcode 12
 
 ----
 

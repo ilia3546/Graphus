@@ -29,11 +29,11 @@ public class GraphQueryKeyedContainer<Key: CodingKey> {
         self.addField(keyedField.stringValue)
     }
     
-    public func addFields(_ keyedFields: [Key]){
+    public func addFields(_ keyedFields: [Key]) {
         self.addFields(keyedFields.map({ $0.stringValue }))
     }
    
-    public func addField(_ keyedQuery: KeyedQuery<Key>){
+    public func addField(_ keyedQuery: KeyedQuery<Key>) {
         self.addField(keyedQuery as Field)
     }
     

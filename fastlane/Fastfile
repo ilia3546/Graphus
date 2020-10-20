@@ -19,8 +19,8 @@ platform :ios do
 
   desc "Archive framework"
   lane :archive do |options|
-    carthage(command: "build", no_skip_current: true, platform: "ios")
-    carthage(command: "archive", frameworks: ["Graphus"], output: "Graphus.framework.zip")
+    carthage_wrapper(command: "build", no_skip_current: true, platform: "ios")
+    carthage_wrapper(command: "archive", frameworks: ["Graphus"], output: "Graphus.framework.zip")
     UI.success "Framework archived to ./Graphus.framework.zip"
   end
 
@@ -102,12 +102,12 @@ platform :ios do
 
   desc "Bootstrap carthage"
   lane :bootstrap do
-    carthage(platform: "ios", cache_builds: true)
+    carthage_wrapper(platform: "ios", cache_builds: true)
   end
 
   desc "Update dependencies"
   lane :update do
-    carthage(command: "update", platform: "ios", cache_builds: true)
+    carthage_wrapper(command: "update", platform: "ios", cache_builds: true)
   end
 
   desc "Run unit testing"
@@ -124,5 +124,26 @@ platform :ios do
     clear_derived_data
     xcclean
   end
+
+  desc "Run carthage in a wrapper that works with Xcode 12"
+  lane :carthage_wrapper do |options|
+    require 'tempfile'
+    tmp = Tempfile.new('xcconfig')
+    oldXcconfig = ENV['XCODE_XCCONFIG_FILE']
+    ENV['XCODE_XCCONFIG_FILE'] = tmp.path
+    begin
+      tmp.write("EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_simulator__NATIVE_ARCH_64_BIT_x86_64__XCODE_1200 = arm64 arm64e armv7 armv7s armv6 armv8\n")
+      tmp.write("EXCLUDED_ARCHS = $(inherited) $(EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_$(EFFECTIVE_PLATFORM_SUFFIX)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT)__XCODE_$(XCODE_VERSION_MAJOR))\n")
+      tmp.flush
+
+      carthage(options)
+    ensure
+      # Always delete the temp file
+      tmp.close
+      tmp.unlink
+      ENV['XCODE_XCCONFIG_FILE'] = oldXcconfig
+    end
+  end
+
 
 end
