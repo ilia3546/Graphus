@@ -18,6 +18,19 @@ extension String: Field {
     }
 }
 
+extension WritableKeyPath: Field where Root: Reflectable, Value: ReflectionDecodable {
+    public var fieldString: String {
+        if let property = try? Root.reflectProperty(forKey: self), let rootProp = property.path.first {
+            if property.path.count > 1 {
+                return Query(rootProp, fields: Array(property.path.dropFirst())).fieldString
+            } else {
+                return rootProp
+            }
+        }
+        return ""
+    }
+}
+
 public class Query: Field {
     
     public var name: String?
@@ -37,11 +50,15 @@ public class Query: Field {
         return Query(fields: model.fields(with: context))
     }
     
-    public init(_ name: String, alias: String? = nil, arguments: Arguments = [:], fields: [Field] = []) {
+    public init(_ name: String, alias: String? = nil, arguments: Arguments = [:], fields: [Field]) {
         self.name = name
         self.alias = alias
         self.fields = fields
         self.arguments = arguments
+    }
+    
+    public convenience init<T: Reflectable, Z: ReflectionDecodable>(_ name: String, alias: String? = nil, arguments: Arguments = [:], on reflectableModel: T.Type, fields: [WritableKeyPath<T, Z>]) {
+        self.init(name, alias: alias, arguments: arguments, fields: fields)
     }
     
     public convenience init(_ name: String, alias: String? = nil, arguments: Arguments = [:], model: Queryable.Type, context: QueryBuilderContext? = nil) {

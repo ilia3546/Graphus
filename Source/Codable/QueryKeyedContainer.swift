@@ -1,5 +1,5 @@
 //
-//  GraphQuery.swift
+//  QueryKeyedContainer.swift
 //  RetailSDK
 //
 //  Created by Ilya Kharlamov on 27/02/2019.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// GraphQL query
-public class GraphQueryContainer {
+public class QueryKeyedContainer<Key: CodingKey> {
     
     internal var builder: QueryBuilder
     
@@ -25,9 +25,21 @@ public class GraphQueryContainer {
         self.builder.fields.append(contentsOf: fields)
     }
     
-    public func on(_ typeName: String, closure: @escaping (GraphQueryContainer) -> Void) {
+    public func addField(_ keyedField: Key){
+        self.addField(keyedField.stringValue)
+    }
+    
+    public func addFields(_ keyedFields: [Key]) {
+        self.addFields(keyedFields.map({ $0.stringValue }))
+    }
+   
+    public func addField(_ keyedQuery: KeyedQuery<Key>) {
+        self.addField(keyedQuery as Field)
+    }
+    
+    public func on(_ typeName: String, keyedClosure: @escaping (QueryKeyedContainer) -> Void) {
         let builder = QueryBuilder()
-        closure(builder.query())
+        keyedClosure(builder.query(keyedBy: Key.self))
         self.builder.fields.append(OnQuery(typeName: typeName, fields: builder.fields))
     }
     
@@ -36,6 +48,5 @@ public class GraphQueryContainer {
         model.buildQuery(with: builder, context: context)
         self.builder.fields.append(OnQuery(typeName: typeName, fields: builder.fields))
     }
-
+    
 }
-
