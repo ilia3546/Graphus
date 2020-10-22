@@ -15,8 +15,8 @@ public class QueryBuilder {
     public var fields = [Field]()
     
     /// Query
-    public func query() -> QueryContainer {
-        return QueryContainer(self)
+    public func query() -> GraphQueryContainer {
+        return GraphQueryContainer(self)
     }
     
     public init() {}
