@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Graphus'
-  s.version          = '2.1.0'
+  s.version          = '2.0.6'
   s.summary          = 'Powerful and strongly-typed, pure-Swift GraphQL client for iOS'
   s.homepage         = 'https://github.com/ilia3546/Graphus'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
@@ -21,7 +21,6 @@ Pod::Spec.new do |s|
  
   s.subspec 'Core' do |cs|
       cs.source_files  = 'Source/Core/**/*.{swift,h,m}'
-      cs.source_files  = 'Source/Reflection/**/*.{swift,h,m}'
   end
   
   s.subspec 'Codable' do |cs|
