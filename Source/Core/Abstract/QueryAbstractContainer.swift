@@ -25,6 +25,7 @@ public class QueryAbstractContainer<Type: AbstractType> {
     public func addModel(_ model: Queryable.Type, for type: Type, with context: QueryBuilderContext? = nil) {
         let builder = QueryBuilder()
         model.buildQuery(with: builder, context: context)
+        self.builder.fields.append(OnQuery(typeName: type.rawValue, fields: builder.fields))
     }
     
 }
