@@ -1,6 +1,6 @@
 //
 //  MutationContainer.swift
-//  RetailSDK
+//  Graphus
 //
 //  Created by Ilya Kharlamov on 27/02/2019.
 //  Copyright © 2019 Bluetech LLC. All rights reserved.

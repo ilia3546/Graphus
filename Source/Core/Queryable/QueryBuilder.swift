@@ -1,6 +1,6 @@
 //
 //  QueryBuilder.swift
-//  RetailSDK
+//  Graphus
 //
 //  Created by Ilya Kharlamov on 10/02/2019.
 //  Copyright © 2019 Bluetech LLC. All rights reserved.
@@ -15,8 +15,8 @@ public class QueryBuilder {
     public var fields = [Field]()
     
     /// Query
-    public func query() -> GraphQueryContainer {
-        return GraphQueryContainer(self)
+    public func query() -> QueryContainer {
+        return QueryContainer(self)
     }
     
     public init() {}
