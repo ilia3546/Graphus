@@ -8,7 +8,7 @@
 import Foundation
 
 extension QueryBuilder {
-    public func query<Type>(keyedBy type: Type.Type) -> QueryAbstractContainer<Type> where Type : AbstractType {
+    public func abstractQuery<Type>(typedBy: Type.Type) -> QueryAbstractContainer<Type> where Type : AbstractType {
         return QueryAbstractContainer<Type>(self)
     }
 }
