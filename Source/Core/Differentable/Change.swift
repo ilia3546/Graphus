@@ -8,10 +8,16 @@
 
 import Foundation
 
-public protocol Change {
+public protocol Change: CustomDebugStringConvertible {
     var key: String { get set }
     var isForcedToSend: Bool { get set }
-    func print(padding: Int)
+    func description(padding: Int) -> String
+}
+
+extension Change {
+    public var debugDescription: String {
+        return self.description(padding: 0)
+    }
 }
 
 public struct FieldChange: Change, Hashable, Equatable {
@@ -29,15 +35,17 @@ public struct FieldChange: Change, Hashable, Equatable {
         hasher.combine(self.key)
     }
     
-    public func print(padding: Int) {
+    public func description(padding: Int) -> String {
         var paddingStr = ""
         for _ in 0 ..< padding { paddingStr += "\t" }
-        Swift.print(paddingStr, ".\(self.key + (self.isForcedToSend ? "*" : "")) | ", self.oldValue.argumentValue, "->", self.newValue.argumentValue)
+        return [
+            paddingStr, ".\(self.key + (self.isForcedToSend ? "*" : "")) | ", self.oldValue.argumentValue, "->", self.newValue.argumentValue
+        ].joined(separator: " ")
     }
     
 }
 
-public struct RootChange: Change, Hashable, Equatable {
+public struct RootChange: Change, Hashable, Equatable, CustomDebugStringConvertible {
     
     public var key: String
     public var isForcedToSend: Bool = false
@@ -51,14 +59,19 @@ public struct RootChange: Change, Hashable, Equatable {
         hasher.combine(self.key)
     }
     
-    public func print(padding: Int) {
+    public func description(padding: Int) -> String {
         var paddingStr = ""
         for _ in 0..<padding { paddingStr += "\t" }
-        Swift.print(paddingStr, ".\(self.key + (self.isForcedToSend ? "*" : "")) | [")
+        var result: [String] = [
+            paddingStr, ".\(self.key + (self.isForcedToSend ? "*" : "")) | ["
+        ]
         for childChange in self.childChanges {
-            childChange.print(padding: padding + 1)
+            result.append("\n")
+            result.append(childChange.description(padding: padding + 1))
         }
-        Swift.print(paddingStr, "]")
+        result.append("\n")
+        result.append("]")
+        return result.joined(separator: " ")
     }
-    
+
 }

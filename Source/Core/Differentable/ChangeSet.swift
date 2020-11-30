@@ -103,18 +103,20 @@ public struct ChangeSet: Codable {
         return !self.changes.filter({ !$0.isForcedToSend }).isEmpty
     }
     
-    public func debugPrint() {
-        for change in self.changes {
-            change.print(padding: 0)
-        }
-    }
-    
     public func first(where key: CodingKey) -> Change? {
         return self.first(where: key.stringValue)
     }
     
     public func first(where key: String) -> Change? {
         return self.changes.first(where: { $0.key == key })
+    }
+    
+}
+
+extension ChangeSet: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        return self.changes.map({ $0.description(padding: 0) }).joined(separator: "\n")
     }
     
 }
