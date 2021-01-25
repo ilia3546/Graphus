@@ -16,6 +16,7 @@ public struct GraphQLError: Error {
     }
     
     public var message: String
+    public var userInfo: [String: Any]
     public var locations: [Location]?
     public var path: [String]?
     public var extensions: Any?
@@ -27,6 +28,7 @@ public struct GraphQLError: Error {
             return nil
         }
         
+        self.userInfo = json
         self.message = message
         if let locations = json["locations"] as? [[String: Int]]{
             self.locations = locations.compactMap({
@@ -50,5 +52,14 @@ extension GraphQLError: LocalizedError {
     }
     public var errorDescription: String? {
         return self.message
+    }
+}
+
+extension GraphQLError: CustomNSError {
+    public static var errorDomain: String {
+        return "Graphus.GraphQL"
+    }
+    public var errorUserInfo: [String : Any] {
+        return self.userInfo
     }
 }

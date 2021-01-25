@@ -62,32 +62,35 @@ public class GraphusRequest {
     }
     
     private static func validateStatus(request: URLRequest?, response: HTTPURLResponse, data: Data?) -> DataRequest.ValidationResult {
-        
+        var rawResponse: String?
+        if let data = data {
+            rawResponse = String(decoding: data, as: UTF8.self)
+        }
         switch response.statusCode {
-        case 400: return .failure(GraphusError.client("Bad Request"))
-        case 401: return .failure(GraphusError.authentication("Unauthorized"))
-        case 402: return .failure(GraphusError.client("Payment Required"))
-        case 403: return .failure(GraphusError.authentication("Forbidden"))
-        case 404: return .failure(GraphusError.client("Not Found"))
-        case 405: return .failure(GraphusError.client("Method Not Allowed"))
-        case 406: return .failure(GraphusError.client("Not Acceptable"))
-        case 407: return .failure(GraphusError.authentication("Proxy Authentication Required"))
-        case 408: return .failure(GraphusError.client("Request Timeout"))
-        case 409: return .failure(GraphusError.client("Conflict"))
-        case 410: return .failure(GraphusError.client("Gone"))
-        case 411: return .failure(GraphusError.client("Length Required"))
-        case 412: return .failure(GraphusError.client("Precondition Failed"))
-        case 413: return .failure(GraphusError.client("Request Entity Too Large"))
-        case 414: return .failure(GraphusError.client("Request-URI Too Long"))
-        case 415: return .failure(GraphusError.client("Unsupported Media Type"))
-        case 416: return .failure(GraphusError.client("Requested Range Not Satisfiable"))
-        case 417: return .failure(GraphusError.client("Expectation Failed"))
-        case 500: return .failure(GraphusError.serverError("Internal Server Error"))
-        case 501: return .failure(GraphusError.serverError("Not Implemented"))
-        case 502: return .failure(GraphusError.serverError("Bad Gateway"))
-        case 503: return .failure(GraphusError.serverError("Service Unavailable"))
-        case 504: return .failure(GraphusError.serverError("Gateway Timeout"))
-        case 505: return .failure(GraphusError.serverError("HTTP Version Not Supported"))
+        case 400: return .failure(GraphusError.client("Bad Request", response.statusCode, rawResponse))
+        case 401: return .failure(GraphusError.authentication("Unauthorized", response.statusCode, rawResponse))
+        case 402: return .failure(GraphusError.client("Payment Required", response.statusCode, rawResponse))
+        case 403: return .failure(GraphusError.authentication("Forbidden", response.statusCode, rawResponse))
+        case 404: return .failure(GraphusError.client("Not Found", response.statusCode, rawResponse))
+        case 405: return .failure(GraphusError.client("Method Not Allowed", response.statusCode, rawResponse))
+        case 406: return .failure(GraphusError.client("Not Acceptable", response.statusCode, rawResponse))
+        case 407: return .failure(GraphusError.authentication("Proxy Authentication Required", response.statusCode, rawResponse))
+        case 408: return .failure(GraphusError.client("Request Timeout", response.statusCode, rawResponse))
+        case 409: return .failure(GraphusError.client("Conflict", response.statusCode, rawResponse))
+        case 410: return .failure(GraphusError.client("Gone", response.statusCode, rawResponse))
+        case 411: return .failure(GraphusError.client("Length Required", response.statusCode, rawResponse))
+        case 412: return .failure(GraphusError.client("Precondition Failed", response.statusCode, rawResponse))
+        case 413: return .failure(GraphusError.client("Request Entity Too Large", response.statusCode, rawResponse))
+        case 414: return .failure(GraphusError.client("Request-URI Too Long", response.statusCode, rawResponse))
+        case 415: return .failure(GraphusError.client("Unsupported Media Type", response.statusCode, rawResponse))
+        case 416: return .failure(GraphusError.client("Requested Range Not Satisfiable", response.statusCode, rawResponse))
+        case 417: return .failure(GraphusError.client("Expectation Failed", response.statusCode, rawResponse))
+        case 500: return .failure(GraphusError.server("Internal Server Error", response.statusCode, rawResponse))
+        case 501: return .failure(GraphusError.server("Not Implemented", response.statusCode, rawResponse))
+        case 502: return .failure(GraphusError.server("Bad Gateway", response.statusCode, rawResponse))
+        case 503: return .failure(GraphusError.server("Service Unavailable", response.statusCode, rawResponse))
+        case 504: return .failure(GraphusError.server("Gateway Timeout", response.statusCode, rawResponse))
+        case 505: return .failure(GraphusError.server("HTTP Version Not Supported", response.statusCode, rawResponse))
         default: break
         }
         
